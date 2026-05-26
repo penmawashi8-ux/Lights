@@ -73,8 +73,8 @@ function applyClick(
   return next;
 }
 
-function makeEmptyBoard(size: number): boolean[][] {
-  return Array.from({ length: size }, () => Array(size).fill(false));
+function makeFullBoard(size: number): boolean[][] {
+  return Array.from({ length: size }, () => Array(size).fill(true));
 }
 
 export function generatePuzzle(
@@ -89,8 +89,7 @@ export function generatePuzzle(
       ? size * 4
       : size * 8;
 
-  let board = makeEmptyBoard(size);
-  const usedClicks = new Set<number>();
+  let board = makeFullBoard(size);
 
   let count = 0;
   let attempts = 0;
@@ -98,22 +97,20 @@ export function generatePuzzle(
     attempts++;
     const row = Math.floor(Math.random() * size);
     const col = Math.floor(Math.random() * size);
-    const key = row * size + col;
-    // Allow repeated clicks but avoid same click twice in a row to prevent trivial cancellation
     board = applyClick(board, row, col, size, pattern);
-    usedClicks.add(key);
     count++;
   }
 
-  // If board is all-off (degenerate case), retry
-  const anyOn = board.some((row) => row.some((cell) => cell));
-  if (!anyOn) {
+  // If board is all-on (degenerate), force at least one off
+  const anyOff = board.some((row) => row.some((cell) => !cell));
+  if (!anyOff) {
     board = applyClick(board, 0, 0, size, pattern);
   }
 
   return board;
 }
 
+// Win = all cells ON (lit)
 export function isSolved(board: boolean[][]): boolean {
-  return board.every((row) => row.every((cell) => !cell));
+  return board.every((row) => row.every((cell) => cell));
 }
