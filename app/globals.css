@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+@keyframes celebrate {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.05) rotate(-1deg); }
+  75% { transform: scale(1.05) rotate(1deg); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 6px 1px rgba(251, 191, 36, 0.5); }
+  50% { box-shadow: 0 0 18px 4px rgba(251, 191, 36, 0.9); }
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+.cell-on {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.fade-in-down {
+  animation: fadeInDown 0.4s ease-out;
+}
+
+.confetti-piece {
+  animation: confettiFall linear forwards;
+}
+
+.board-celebrate {
+  animation: celebrate 0.4s ease-in-out;
+}
