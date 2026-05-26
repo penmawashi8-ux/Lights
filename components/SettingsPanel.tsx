@@ -31,20 +31,20 @@ function SelectGroup<T extends string | number>({
 }) {
   return (
     <div className="space-y-2">
-      <p className="text-sm font-semibold text-slate-300 tracking-wide">{label}</p>
+      <p className="text-sm font-bold text-green-300 tracking-wide">{label}</p>
       <div className="flex flex-wrap gap-2">
-        {options.map(([v, label]) => (
+        {options.map(([v, lbl]) => (
           <button
             key={v}
             onClick={() => onChange(v)}
             className={[
-              "px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150",
+              "px-3 py-2 rounded-xl text-sm font-bold transition-all duration-150 active:scale-95",
               value === v
-                ? "bg-yellow-400 text-slate-900 shadow-lg shadow-yellow-400/30"
-                : "bg-slate-700 text-slate-300 hover:bg-slate-600",
+                ? "bg-gradient-to-b from-yellow-300 to-amber-400 text-green-900 shadow-lg shadow-yellow-400/40 border border-yellow-200/60"
+                : "bg-green-900/60 text-green-300 hover:bg-green-800/60 border border-green-700/40",
             ].join(" ")}
           >
-            {label}
+            {lbl}
           </button>
         ))}
       </div>
@@ -62,41 +62,69 @@ export default function SettingsPanel({
   onStart,
 }: SettingsPanelProps) {
   return (
-    <div className="w-full max-w-md mx-auto space-y-6 fade-in-down">
-      <div className="text-center space-y-1">
-        <h1 className="text-4xl font-bold tracking-tight text-yellow-400">
-          💡 ライツアウト
-        </h1>
-        <p className="text-slate-400 text-sm">全てのマスを消灯させよう</p>
+    <div className="w-full max-w-sm mx-auto space-y-5 fade-in-up">
+      {/* Wooden title sign */}
+      <div className="text-center space-y-2">
+        <div className="relative inline-block">
+          <div className="absolute -top-3 left-8 w-2.5 h-6 bg-amber-600 rounded-full opacity-80" />
+          <div className="absolute -top-3 right-8 w-2.5 h-6 bg-amber-600 rounded-full opacity-80" />
+          <div className="bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 rounded-3xl px-8 py-3.5 shadow-2xl border-2 border-amber-500/60">
+            <h1 className="text-yellow-100 font-black text-2xl tracking-wide drop-shadow-lg">
+              💡 ポコっとライト
+            </h1>
+          </div>
+        </div>
+        <p className="text-green-400 text-sm font-medium">
+          全部のマスを光らせよう！✨
+        </p>
       </div>
 
-      <div className="bg-slate-800/60 rounded-2xl p-5 space-y-5 border border-slate-700/50">
+      {/* Decorative animals */}
+      <div className="flex justify-around text-4xl px-4 select-none">
+        <span className="float-anim" style={{ animationDelay: "0s" }}>🦉</span>
+        <span className="float-anim" style={{ animationDelay: "0.5s" }}>🐰</span>
+        <span className="float-anim" style={{ animationDelay: "1s" }}>🦔</span>
+        <span className="float-anim" style={{ animationDelay: "1.5s" }}>🦊</span>
+      </div>
+
+      {/* Settings card */}
+      <div className="bg-gradient-to-br from-green-900/60 to-green-950/80 backdrop-blur-sm rounded-3xl p-5 space-y-5 border border-green-700/50 shadow-xl">
         <SelectGroup<Pattern>
-          label="めくりパターン"
+          label="🐾 めくりパターン"
           options={Object.entries(PATTERN_LABELS) as [Pattern, string][]}
           value={pattern}
           onChange={onPatternChange}
         />
+        <div className="border-t border-green-700/40" />
         <SelectGroup<BoardSize>
-          label="ボードサイズ"
+          label="🌿 ボードサイズ"
           options={([3, 4, 5, 6] as BoardSize[]).map((s) => [s, `${s}×${s}`])}
           value={boardSize}
           onChange={onBoardSizeChange}
         />
+        <div className="border-t border-green-700/40" />
         <SelectGroup<Difficulty>
-          label="難易度"
+          label="🍀 難易度"
           options={Object.entries(DIFFICULTY_LABELS) as [Difficulty, string][]}
           value={difficulty}
           onChange={onDifficultyChange}
         />
       </div>
 
+      {/* Start button */}
       <button
         onClick={onStart}
-        className="w-full py-4 bg-yellow-400 hover:bg-yellow-300 active:scale-95 text-slate-900 font-bold text-lg rounded-xl transition-all duration-150 shadow-lg shadow-yellow-400/30"
+        className="w-full py-4 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-lg rounded-2xl transition-all duration-150 shadow-xl shadow-green-900/50 border-b-4 border-green-800/60 flex items-center justify-center gap-2"
       >
-        ゲームスタート
+        🌟 ゲームスタート
       </button>
+
+      {/* Bottom decoration */}
+      <div className="text-center text-3xl select-none space-x-3">
+        <span>🐻</span>
+        <span>🔥</span>
+        <span>🦝</span>
+      </div>
     </div>
   );
 }

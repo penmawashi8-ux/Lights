@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ライツアウト",
-  description: "全てのマスを消灯させるパズルゲーム",
+  title: "ポコっとライト",
+  description: "全部のマスを光らせよう！森の妖精ライトパズルゲーム",
 };
 
 export default function RootLayout({

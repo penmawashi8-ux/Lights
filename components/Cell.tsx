@@ -7,23 +7,27 @@ interface CellProps {
 }
 
 export default function Cell({ on, onClick, size }: CellProps) {
-  const cellPx =
-    size === 3 ? "w-20 h-20 sm:w-24 sm:h-24" :
-    size === 4 ? "w-16 h-16 sm:w-20 sm:h-20" :
-    size === 5 ? "w-13 h-13 sm:w-16 sm:h-16" :
-    "w-11 h-11 sm:w-14 sm:h-14";
+  const dims =
+    size === 3 ? "w-20 h-20 sm:w-24 sm:h-24 text-3xl" :
+    size === 4 ? "w-16 h-16 sm:w-20 sm:h-20 text-2xl" :
+    size === 5 ? "w-12 h-12 sm:w-15 sm:h-15 text-xl" :
+    "w-10 h-10 sm:w-12 sm:h-12 text-base";
 
   return (
     <button
       onClick={onClick}
       className={[
-        cellPx,
-        "rounded-lg transition-all duration-200 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400",
+        dims,
+        "rounded-2xl transition-all duration-200 active:scale-90",
+        "flex items-center justify-center select-none",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300",
         on
-          ? "bg-yellow-400 cell-on shadow-yellow-400/60 shadow-lg"
-          : "bg-slate-700 hover:bg-slate-600 shadow-inner shadow-slate-900/50",
+          ? "bg-gradient-to-br from-yellow-300 to-amber-400 cell-on border-2 border-yellow-200/80 shadow-lg shadow-yellow-400/50"
+          : "bg-gradient-to-br from-green-900 to-green-950 hover:from-green-800 hover:to-green-900 border-2 border-green-700/50 shadow-inner shadow-black/40",
       ].join(" ")}
-      aria-label={on ? "オン" : "オフ"}
-    />
+      aria-label={on ? "ライト ON" : "ライト OFF"}
+    >
+      {on ? "⭐" : "🍃"}
+    </button>
   );
 }

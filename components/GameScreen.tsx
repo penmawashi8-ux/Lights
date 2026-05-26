@@ -14,6 +14,14 @@ import {
   isSolved,
 } from "@/lib/gameLogic";
 
+const PATTERN_HINTS: Record<Pattern, string> = {
+  plus: "タイルをタップすると、上下左右と自分自身の明かりがON/OFFするよ！",
+  x: "タイルをタップすると、斜め4方向と自分自身の明かりがON/OFFするよ！",
+  square: "タイルをタップすると、周囲8マスと自分自身の明かりがON/OFFするよ！",
+  rowcol: "タイルをタップすると、同じ行・列の全ての明かりがON/OFFするよ！",
+  self: "タイルをタップすると、自分自身の明かりだけがON/OFFするよ！",
+};
+
 interface GameScreenProps {
   pattern: Pattern;
   difficulty: Difficulty;
@@ -71,78 +79,142 @@ export default function GameScreen({
 
   const difficultyColor =
     difficulty === "easy"
-      ? "text-emerald-400"
+      ? "text-emerald-600"
       : difficulty === "normal"
-      ? "text-yellow-400"
-      : "text-red-400";
+      ? "text-amber-600"
+      : "text-red-600";
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-5 fade-in-down">
+    <div className="w-full max-w-sm mx-auto space-y-3 fade-in-up">
       {showConfetti && <Confetti />}
 
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-yellow-400">💡 ライツアウト</h1>
+      {/* Top navigation */}
+      <div className="flex items-center justify-between px-1">
         <button
           onClick={onChangeSettings}
-          className="text-sm px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-slate-300 transition-colors"
+          className="flex flex-col items-center gap-0.5 active:scale-90 transition-transform"
         >
-          設定を変える
+          <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center text-2xl shadow-md border-2 border-green-500/60">
+            🦉
+          </div>
+          <span className="text-green-300 text-xs font-bold">メニュー</span>
+        </button>
+
+        {/* Wooden title sign */}
+        <div className="flex-1 mx-3 text-center">
+          <div className="relative inline-block">
+            <div className="absolute -top-2.5 left-6 w-2 h-5 bg-amber-600 rounded-full opacity-80" />
+            <div className="absolute -top-2.5 right-6 w-2 h-5 bg-amber-600 rounded-full opacity-80" />
+            <div className="bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 rounded-2xl px-5 py-2.5 shadow-xl border-2 border-amber-500/50">
+              <p className="text-yellow-100 font-black text-base sm:text-lg leading-tight tracking-wide drop-shadow-md">
+                💡 ポコっとライト
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={onChangeSettings}
+          className="flex flex-col items-center gap-0.5 active:scale-90 transition-transform"
+        >
+          <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center text-2xl shadow-md border-2 border-green-500/60">
+            🦊
+          </div>
+          <span className="text-green-300 text-xs font-bold">設定</span>
         </button>
       </div>
 
       {/* Info bar */}
-      <div className="bg-slate-800/60 rounded-xl p-3 flex items-center justify-between border border-slate-700/50">
-        <div className="text-sm text-slate-400 space-y-0.5">
-          <p>
-            <span className="text-slate-500">パターン: </span>
-            <span className="text-slate-200 font-medium">{PATTERN_LABELS[pattern]}</span>
-          </p>
-          <p>
-            <span className="text-slate-500">難易度: </span>
-            <span className={`font-medium ${difficultyColor}`}>
-              {DIFFICULTY_LABELS[difficulty]}
-            </span>
+      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl px-4 py-2.5 flex items-center gap-2 shadow-md border border-amber-200/60">
+        <div className="flex-1 min-w-0">
+          <p className="text-green-700 text-xs font-semibold">🐾 パターン</p>
+          <p className="text-green-900 font-bold text-sm leading-tight truncate">
+            {PATTERN_LABELS[pattern]}
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-slate-500 text-xs">手数</p>
-          <p className="text-3xl font-bold text-white tabular-nums">{moves}</p>
+        <div className="text-2xl float-anim select-none">🐻</div>
+        <div className="flex-1 text-center">
+          <p className="text-green-700 text-xs font-semibold">🍀 難易度</p>
+          <p className={`font-bold text-sm leading-tight ${difficultyColor}`}>
+            {DIFFICULTY_LABELS[difficulty]}
+          </p>
+        </div>
+        <div className="w-px h-8 bg-green-200/80" />
+        <div className="text-center w-12 flex-shrink-0">
+          <p className="text-green-700 text-xs font-semibold">手数</p>
+          <p className="text-green-900 font-black text-2xl tabular-nums leading-tight">
+            {moves}
+          </p>
         </div>
       </div>
 
       {/* Clear banner */}
       {solved && (
-        <div className="bg-yellow-400/20 border border-yellow-400/50 rounded-xl p-4 text-center fade-in-down">
-          <p className="text-2xl font-bold text-yellow-400">🎉 クリア！</p>
-          <p className="text-slate-300 text-sm mt-1">
-            {moves} 手でクリアしました！
+        <div className="bg-gradient-to-r from-yellow-400 to-amber-400 border-2 border-yellow-300/80 rounded-2xl p-3 text-center pop-in shadow-lg shadow-yellow-500/30">
+          <p className="text-2xl font-black text-white drop-shadow-md">
+            🎉 全部ついた！クリア！
+          </p>
+          <p className="text-yellow-100 text-sm mt-0.5">
+            {moves} 手でクリアしました！⭐
           </p>
         </div>
       )}
 
-      {/* Board */}
-      <div className="flex justify-center">
+      {/* Board with side decorations */}
+      <div className="relative flex items-center justify-center py-1">
+        <div className="absolute -left-1 top-1/2 -translate-y-1/2 text-4xl select-none pointer-events-none float-anim">
+          🐰
+        </div>
         <Board
           board={board}
           size={boardSize}
           onCellClick={handleCellClick}
           celebrating={celebrating}
         />
+        <div
+          className="absolute -right-1 top-1/2 -translate-y-1/2 text-4xl select-none pointer-events-none float-anim"
+          style={{ animationDelay: "0.8s" }}
+        >
+          🦝
+        </div>
       </div>
 
-      {/* Size info */}
-      <p className="text-center text-slate-500 text-xs">
-        {boardSize}×{boardSize} ボード
-      </p>
+      {/* Board size label */}
+      <div className="flex justify-center">
+        <span className="bg-gradient-to-br from-amber-800 to-amber-900 text-yellow-200 text-xs font-bold px-3 py-1 rounded-full shadow-md border border-amber-700/60">
+          {boardSize}×{boardSize} ボード
+        </span>
+      </div>
 
-      {/* Actions */}
-      <button
-        onClick={newPuzzle}
-        className="w-full py-3.5 bg-slate-700 hover:bg-slate-600 active:scale-95 text-white font-semibold rounded-xl transition-all duration-150"
-      >
-        新しいパズル
-      </button>
+      {/* Hint text */}
+      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl px-4 py-3 flex items-start gap-2.5 border border-amber-200/50 shadow">
+        <span className="text-yellow-500 text-lg flex-shrink-0 mt-0.5">💡</span>
+        <p className="text-green-800 text-xs leading-relaxed">
+          {PATTERN_HINTS[pattern]}
+        </p>
+      </div>
+
+      {/* Bottom row: animals + new puzzle button */}
+      <div className="flex items-end gap-2">
+        <div
+          className="text-3xl select-none float-anim"
+          style={{ animationDelay: "0.4s" }}
+        >
+          🦔
+        </div>
+        <button
+          onClick={newPuzzle}
+          className="flex-1 py-3.5 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-base rounded-2xl transition-all duration-150 shadow-lg shadow-green-900/50 border-b-4 border-green-800/60 flex items-center justify-center gap-2"
+        >
+          新しいパズル <span className="text-lg">🐾</span>
+        </button>
+        <div
+          className="text-3xl select-none float-anim"
+          style={{ animationDelay: "1.2s" }}
+        >
+          🔥
+        </div>
+      </div>
     </div>
   );
 }
