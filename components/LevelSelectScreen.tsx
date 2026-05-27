@@ -150,13 +150,15 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
               onClick={() => !isLocked && onSelectLevel(pattern, size, i)}
               className={[
                 "relative flex flex-col items-center justify-center rounded-xl border transition-all duration-150 aspect-square text-xs font-bold shadow-sm",
-                baseColor,
-                "border-transparent",
-                isLocked ? "opacity-35 cursor-not-allowed" : "active:scale-90 hover:brightness-125 cursor-pointer",
+                isLocked
+                  ? "bg-black/50 border-white/10 cursor-not-allowed"
+                  : baseColor + " border-transparent active:scale-90 hover:brightness-125 cursor-pointer",
                 isNext ? "ring-2 ring-yellow-400 ring-offset-1 ring-offset-transparent animate-pulse" : "",
               ].filter(Boolean).join(" ")}
             >
-              {!isLocked && (
+              {isLocked ? (
+                <span className="text-white/25 text-base leading-none">×</span>
+              ) : (
                 <span className="leading-none">{i + 1}</span>
               )}
             </button>
