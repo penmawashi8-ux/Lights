@@ -1,5 +1,4 @@
 export type Pattern = "plus" | "x" | "square" | "rowcol" | "self";
-export type Difficulty = "easy" | "normal" | "hard";
 export type BoardSize = 3 | 4 | 5 | 6;
 
 export const PATTERN_LABELS: Record<Pattern, string> = {
@@ -8,12 +7,6 @@ export const PATTERN_LABELS: Record<Pattern, string> = {
   square: "四角型（■）",
   rowcol: "同行同列",
   self: "自分のみ",
-};
-
-export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
-  easy: "かんたん",
-  normal: "ふつう",
-  hard: "むずかしい",
 };
 
 export function getAffectedCells(
@@ -79,15 +72,9 @@ function makeFullBoard(size: number): boolean[][] {
 
 export function generatePuzzle(
   size: number,
-  pattern: Pattern,
-  difficulty: Difficulty
+  pattern: Pattern
 ): boolean[][] {
-  const clicks =
-    difficulty === "easy"
-      ? size * 2
-      : difficulty === "normal"
-      ? size * 4
-      : size * 8;
+  const clicks = size * 5;
 
   let board = makeFullBoard(size);
 

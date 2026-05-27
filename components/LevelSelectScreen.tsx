@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import {
-  PATTERN_KEYS, BOARD_SIZES, PATTERN_DISPLAY,
-  getLevelDifficulty, type PatternKey,
+  PATTERN_KEYS, BOARD_SIZES, PATTERN_DISPLAY, type PatternKey,
 } from "@/lib/levels";
 import {
   loadProgress, getClearedSet, getUnlockedUpTo, getTotalCleared,
@@ -17,12 +16,6 @@ interface Props {
 }
 
 type Step = "pattern" | "size" | "levels";
-
-const DIFF_COLOR: Record<string, string> = {
-  easy:   "bg-emerald-700/60 text-emerald-100",
-  normal: "bg-amber-700/60   text-amber-100",
-  hard:   "bg-red-800/60     text-red-100",
-};
 
 export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
   const [step, setStep]         = useState<Step>("pattern");
@@ -50,7 +43,6 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
         <div className="grid grid-cols-2 gap-3">
           {PATTERN_KEYS.map((pk) => {
             const d = PATTERN_DISPLAY[pk];
-            // count cleared for this pattern
             const cleared = BOARD_SIZES.reduce((n, s) =>
               n + getClearedSet(progress, pk, s).size, 0);
             return (
@@ -110,7 +102,6 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
   /* ── Step 3: 100-level grid ── */
   const cleared  = getClearedSet(progress, pattern, size);
   const unlocked = getUnlockedUpTo(cleared);
-  // nextLevel: first uncompleted unlocked level
   const nextIdx  = (() => {
     for (let i = 0; i <= unlocked; i++) { if (!cleared.has(i)) return i; }
     return null;
@@ -128,20 +119,11 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
         <span className="text-yellow-300 font-black">{cleared.size} / 100</span>
       </div>
 
-      {/* Difficulty legend */}
-      <div className="flex gap-2 justify-center text-[10px]">
-        <span className="px-2 py-0.5 bg-emerald-700/60 text-emerald-100 rounded-full">かんたん 1-33</span>
-        <span className="px-2 py-0.5 bg-amber-700/60 text-amber-100 rounded-full">ふつう 34-66</span>
-        <span className="px-2 py-0.5 bg-red-800/60 text-red-100 rounded-full">むずかしい 67-100</span>
-      </div>
-
       <div className="grid grid-cols-10 gap-1 overflow-y-auto max-h-[55vh]">
         {Array.from({ length: 100 }, (_, i) => {
-          const isCleared  = cleared.has(i);
-          const isLocked   = i > unlocked;
-          const isNext     = i === nextIdx;
-          const diff       = getLevelDifficulty(i);
-          const baseColor  = DIFF_COLOR[diff];
+          const isCleared = cleared.has(i);
+          const isLocked  = i > unlocked;
+          const isNext    = i === nextIdx;
 
           return (
             <button
@@ -152,14 +134,16 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
                 "relative flex flex-col items-center justify-center rounded-xl border transition-all duration-150 aspect-square text-xs font-bold shadow-sm",
                 isLocked
                   ? "bg-black/50 border-white/10 cursor-not-allowed"
-                  : baseColor + " border-transparent active:scale-90 hover:brightness-125 cursor-pointer",
+                  : isCleared
+                    ? "bg-amber-600/80 border-amber-400/40 active:scale-90 hover:brightness-125 cursor-pointer"
+                    : "bg-emerald-700/70 border-emerald-500/40 active:scale-90 hover:brightness-125 cursor-pointer",
                 isNext ? "ring-2 ring-yellow-400 ring-offset-1 ring-offset-transparent animate-pulse" : "",
               ].filter(Boolean).join(" ")}
             >
               {isLocked ? (
                 <span className="text-white/25 text-base leading-none">×</span>
               ) : (
-                <span className="leading-none">{i + 1}</span>
+                <span className="leading-none text-white">{i + 1}</span>
               )}
             </button>
           );

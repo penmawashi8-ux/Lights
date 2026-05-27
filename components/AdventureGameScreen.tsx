@@ -4,10 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import Board from "./Board";
 import Confetti from "./Confetti";
 import {
-  PATTERN_DISPLAY, generateLevelBoard, getLevelDifficulty, type PatternKey,
+  PATTERN_DISPLAY, generateLevelBoard, type PatternKey,
 } from "@/lib/levels";
 import { loadProgress, saveProgress, markCleared } from "@/lib/progress";
-import { getAffectedCells, isSolved, DIFFICULTY_LABELS } from "@/lib/gameLogic";
+import { getAffectedCells, isSolved } from "@/lib/gameLogic";
 import type { BoardSize } from "@/lib/gameLogic";
 
 interface Props {
@@ -19,8 +19,6 @@ interface Props {
 }
 
 export default function AdventureGameScreen({ pattern, size, levelIndex, onComplete, onBack }: Props) {
-  const difficulty = getLevelDifficulty(levelIndex);
-
   const [board, setBoard]           = useState<boolean[][]>(() => generateLevelBoard(pattern, size, levelIndex));
   const [moves, setMoves]           = useState(0);
   const [solved, setSolved]         = useState(false);
@@ -53,10 +51,6 @@ export default function AdventureGameScreen({ pattern, size, levelIndex, onCompl
       return () => clearTimeout(t);
     }
   }, [board, solved, pattern, size, levelIndex]);
-
-  const diffColor =
-    difficulty === "easy" ? "text-emerald-400" :
-    difficulty === "normal" ? "text-amber-400" : "text-red-400";
 
   const isLast = levelIndex >= 99;
 
@@ -95,8 +89,6 @@ export default function AdventureGameScreen({ pattern, size, levelIndex, onCompl
         </p>
         <p className="text-green-300 text-xs mt-0.5">
           {PATTERN_DISPLAY[pattern].label}
-          <span className="mx-1.5 text-green-600">|</span>
-          <span className={diffColor}>{DIFFICULTY_LABELS[difficulty]}</span>
           <span className="mx-1.5 text-green-600">|</span>
           {size}×{size}
         </p>
@@ -165,7 +157,7 @@ export default function AdventureGameScreen({ pattern, size, levelIndex, onCompl
           disabled={solved}
           className="flex-1 py-3.5 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 disabled:opacity-50 active:scale-95 text-white font-black text-base rounded-2xl transition-all shadow-lg border-b-4 border-green-800/60 flex items-center justify-center gap-2"
         >
-          リセット 🔄
+          リセット
         </button>
         <div className="flex-shrink-0 float-anim" style={{ animationDelay: "1.2s" }}>
           <img src="/chars/campfire.png" alt="" className="w-14 h-14 object-contain" draggable={false} />
