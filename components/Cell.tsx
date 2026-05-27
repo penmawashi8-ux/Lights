@@ -27,7 +27,7 @@ export default function Cell({ on, onClick, size }: CellProps) {
       <img
         src={on ? "/icons/star.png" : "/icons/leaf.png"}
         alt={on ? "ON" : "OFF"}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-contain p-0.5"
         draggable={false}
       />
     </button>
