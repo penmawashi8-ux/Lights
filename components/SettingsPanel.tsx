@@ -13,6 +13,7 @@ interface SettingsPanelProps {
   onDifficultyChange: (d: Difficulty) => void;
   onBoardSizeChange: (s: BoardSize) => void;
   onStart: () => void;
+  onStartAdventure: () => void;
 }
 
 function SelectGroup<T extends string | number>({
@@ -57,7 +58,7 @@ const DIFFICULTY_ICONS: Record<Difficulty, string> = {
 
 export default function SettingsPanel({
   pattern, difficulty, boardSize,
-  onPatternChange, onDifficultyChange, onBoardSizeChange, onStart,
+  onPatternChange, onDifficultyChange, onBoardSizeChange, onStart, onStartAdventure,
 }: SettingsPanelProps) {
   return (
     <div className="w-full max-w-sm mx-auto space-y-5 fade-in-up">
@@ -128,13 +129,23 @@ export default function SettingsPanel({
         </div>
       </div>
 
-      {/* Start button */}
-      <button
-        onClick={onStart}
-        className="w-full py-4 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-lg rounded-2xl transition-all duration-150 shadow-xl shadow-green-900/50 border-b-4 border-green-800/60"
-      >
-        🌟 ゲームスタート
-      </button>
+      {/* Mode buttons */}
+      <div className="flex gap-3">
+        <button
+          onClick={onStart}
+          className="flex-1 py-4 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-base rounded-2xl transition-all duration-150 shadow-xl shadow-green-900/50 border-b-4 border-green-800/60 flex flex-col items-center gap-0.5"
+        >
+          <span>🎲</span>
+          <span>フリーモード</span>
+        </button>
+        <button
+          onClick={onStartAdventure}
+          className="flex-1 py-4 bg-gradient-to-b from-amber-500 to-amber-700 hover:from-amber-400 hover:to-amber-600 active:scale-95 text-white font-black text-base rounded-2xl transition-all duration-150 shadow-xl shadow-amber-900/50 border-b-4 border-amber-800/60 flex flex-col items-center gap-0.5"
+        >
+          <span>🏔️</span>
+          <span>冒険モード</span>
+        </button>
+      </div>
 
       {/* Bottom characters */}
       <div className="flex items-end justify-around px-4">

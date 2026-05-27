@@ -3,9 +3,11 @@
 import { useState } from "react";
 import SettingsPanel from "@/components/SettingsPanel";
 import GameScreen from "@/components/GameScreen";
+import LevelSelectScreen from "@/components/LevelSelectScreen";
+import AdventureGameScreen from "@/components/AdventureGameScreen";
 import { Pattern, Difficulty, BoardSize } from "@/lib/gameLogic";
 
-type Screen = "settings" | "game";
+type Screen = "settings" | "game" | "level-select" | "adventure";
 
 // Firefly dots scattered in background
 const FIREFLIES = [
@@ -26,6 +28,18 @@ export default function Home() {
   const [pattern, setPattern] = useState<Pattern>("plus");
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [boardSize, setBoardSize] = useState<BoardSize>(5);
+  const [currentLevel, setCurrentLevel] = useState(1);
+
+  // Called when a level is completed and user wants next stage
+  // key={currentLevel} on AdventureGameScreen forces re-mount automatically
+  function handleLevelComplete(completedLevel: number) {
+    if (completedLevel < 100) {
+      setCurrentLevel(completedLevel + 1);
+      // screen stays "adventure"; key change causes re-mount
+    } else {
+      setScreen("level-select");
+    }
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#071407] via-[#0d2410] to-[#071407] flex items-center justify-center px-4 py-8 relative overflow-hidden">
@@ -81,13 +95,29 @@ export default function Home() {
             onDifficultyChange={setDifficulty}
             onBoardSizeChange={setBoardSize}
             onStart={() => setScreen("game")}
+            onStartAdventure={() => setScreen("level-select")}
           />
-        ) : (
+        ) : screen === "game" ? (
           <GameScreen
             pattern={pattern}
             difficulty={difficulty}
             boardSize={boardSize}
             onChangeSettings={() => setScreen("settings")}
+          />
+        ) : screen === "level-select" ? (
+          <LevelSelectScreen
+            onSelectLevel={(level) => {
+              setCurrentLevel(level);
+              setScreen("adventure");
+            }}
+            onBack={() => setScreen("settings")}
+          />
+        ) : (
+          <AdventureGameScreen
+            key={currentLevel}
+            levelNum={currentLevel}
+            onComplete={handleLevelComplete}
+            onBack={() => setScreen("level-select")}
           />
         )}
       </div>
