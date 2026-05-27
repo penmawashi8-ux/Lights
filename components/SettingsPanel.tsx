@@ -13,7 +13,7 @@ interface SettingsPanelProps {
   onDifficultyChange: (d: Difficulty) => void;
   onBoardSizeChange: (s: BoardSize) => void;
   onStart: () => void;
-  onStartAdventure: () => void;
+  onBack: () => void;
 }
 
 function SelectGroup<T extends string | number>({
@@ -58,22 +58,30 @@ const DIFFICULTY_ICONS: Record<Difficulty, string> = {
 
 export default function SettingsPanel({
   pattern, difficulty, boardSize,
-  onPatternChange, onDifficultyChange, onBoardSizeChange, onStart, onStartAdventure,
+  onPatternChange, onDifficultyChange, onBoardSizeChange, onStart, onBack,
 }: SettingsPanelProps) {
   return (
     <div className="w-full max-w-sm mx-auto space-y-5 fade-in-up">
-      {/* Wooden title sign */}
-      <div className="text-center space-y-2">
-        <div className="relative inline-block">
-          <div className="absolute -top-3 left-8 w-2.5 h-6 bg-amber-600 rounded-full opacity-80" />
-          <div className="absolute -top-3 right-8 w-2.5 h-6 bg-amber-600 rounded-full opacity-80" />
-          <div className="bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 rounded-3xl px-8 py-3.5 shadow-2xl border-2 border-amber-500/60">
-            <h1 className="text-yellow-100 font-black text-2xl tracking-wide drop-shadow-lg">
-              💡 ポコっとライト
-            </h1>
+      {/* ヘッダー（もどるボタン＋タイトル） */}
+      <div className="flex items-center gap-3">
+        <button onClick={onBack}
+          className="flex flex-col items-center gap-0.5 active:scale-90 transition-transform">
+          <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center shadow-md border-2 border-green-500/60">
+            <span className="text-white text-xl font-black">◀</span>
+          </div>
+          <span className="text-green-300 text-xs font-bold">もどる</span>
+        </button>
+
+        <div className="flex-1 text-center">
+          <div className="relative inline-block">
+            <div className="absolute -top-2.5 left-6 w-2 h-5 bg-amber-600 rounded-full opacity-80" />
+            <div className="absolute -top-2.5 right-6 w-2 h-5 bg-amber-600 rounded-full opacity-80" />
+            <div className="bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 rounded-2xl px-6 py-2.5 shadow-xl border-2 border-amber-500/50">
+              <p className="text-yellow-100 font-black text-base drop-shadow-md">🎲 フリーモード</p>
+            </div>
           </div>
         </div>
-        <p className="text-green-400 text-sm font-medium">全部のマスを光らせよう！✨</p>
+        <div className="w-12" />
       </div>
 
       {/* Character row */}
@@ -129,30 +137,21 @@ export default function SettingsPanel({
         </div>
       </div>
 
-      {/* Mode buttons */}
-      <div className="flex gap-3">
-        <button
-          onClick={onStart}
-          className="flex-1 py-4 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-base rounded-2xl transition-all duration-150 shadow-xl shadow-green-900/50 border-b-4 border-green-800/60 flex flex-col items-center gap-0.5"
-        >
-          <span>🎲</span>
-          <span>フリーモード</span>
-        </button>
-        <button
-          onClick={onStartAdventure}
-          className="flex-1 py-4 bg-gradient-to-b from-amber-500 to-amber-700 hover:from-amber-400 hover:to-amber-600 active:scale-95 text-white font-black text-base rounded-2xl transition-all duration-150 shadow-xl shadow-amber-900/50 border-b-4 border-amber-800/60 flex flex-col items-center gap-0.5"
-        >
-          <span>🏔️</span>
-          <span>冒険モード</span>
-        </button>
-      </div>
+      {/* Start button */}
+      <button
+        onClick={onStart}
+        className="w-full py-4 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-lg rounded-2xl transition-all duration-150 shadow-xl shadow-green-900/50 border-b-4 border-green-800/60 flex items-center justify-center gap-2"
+      >
+        <span>🎲</span>
+        <span>ゲームスタート</span>
+      </button>
 
       {/* Bottom characters */}
       <div className="flex items-end justify-around px-4">
         {[
           { src: "/chars/hedgehog.png", delay: "0.3s" },
           { src: "/chars/campfire.png", delay: "0.8s" },
-          { src: "/chars/raccoon.png", delay: "1.3s" },
+          { src: "/chars/raccoon.png",  delay: "1.3s" },
         ].map(({ src, delay }) => (
           <div key={src} className="float-anim" style={{ animationDelay: delay }}>
             <img src={src} alt="" className="w-14 h-14 object-contain" draggable={false} />
