@@ -107,25 +107,28 @@ export default function AdventureGameScreen({ pattern, size, levelIndex, onCompl
         </div>
       </div>
 
-      {/* Clear banner */}
+      {/* Clear popup overlay */}
       {solved && (
-        <div className="bg-gradient-to-r from-yellow-400 to-amber-400 border-2 border-yellow-300/80 rounded-2xl p-3 text-center pop-in shadow-lg shadow-yellow-500/30">
-          <p className="text-2xl font-black text-white drop-shadow-md">ステージクリア！</p>
-          <p className="text-yellow-100 text-sm mt-0.5">{moves} 手でクリア！</p>
-          <div className="flex gap-2 mt-3 justify-center">
-            <button
-              onClick={() => onComplete(pattern, size, levelIndex)}
-              disabled={isLast}
-              className="px-4 py-2 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 disabled:opacity-40 active:scale-95 text-white font-black text-sm rounded-xl transition-all shadow-md border-b-2 border-green-900/60"
-            >
-              次のステージ ▶
-            </button>
-            <button
-              onClick={onBack}
-              className="px-4 py-2 bg-gradient-to-b from-amber-500 to-amber-700 hover:from-amber-400 active:scale-95 text-white font-black text-sm rounded-xl transition-all shadow-md border-b-2 border-amber-900/60"
-            >
-              ステージ選択へ
-            </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <div className="relative pop-in bg-gradient-to-b from-yellow-300 to-amber-400 rounded-3xl p-6 text-center shadow-2xl shadow-yellow-500/40 border-4 border-yellow-200/80 w-full max-w-xs">
+            <p className="text-3xl font-black text-white drop-shadow-md">ステージクリア！</p>
+            <p className="text-yellow-900/80 font-bold text-sm mt-1">{moves} 手でクリア！</p>
+            <div className="flex gap-3 mt-5 justify-center">
+              <button
+                onClick={() => onComplete(pattern, size, levelIndex)}
+                disabled={isLast}
+                className="flex-1 py-3 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 disabled:opacity-40 active:scale-95 text-white font-black text-sm rounded-2xl transition-all shadow-md border-b-2 border-green-900/60"
+              >
+                次のステージ ▶
+              </button>
+              <button
+                onClick={onBack}
+                className="flex-1 py-3 bg-gradient-to-b from-amber-600 to-amber-800 hover:from-amber-500 active:scale-95 text-white font-black text-sm rounded-2xl transition-all shadow-md border-b-2 border-amber-900/60"
+              >
+                ステージ選択へ
+              </button>
+            </div>
           </div>
         </div>
       )}
