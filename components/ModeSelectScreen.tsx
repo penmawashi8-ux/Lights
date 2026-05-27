@@ -2,9 +2,11 @@
 
 export default function ModeSelectScreen({
   onFreeMode,
+  onChallenge,
   onAdventure,
 }: {
   onFreeMode: () => void;
+  onChallenge: () => void;
   onAdventure: () => void;
 }) {
   return (
@@ -46,9 +48,21 @@ export default function ModeSelectScreen({
         >
           <div className="text-left">
             <p className="text-white font-black text-xl">フリーモード</p>
-            <p className="text-green-300 text-sm mt-0.5">パターン・サイズ・難易度を<br />自分で選んで自由にあそぶ</p>
+            <p className="text-green-300 text-sm mt-0.5">パターン・サイズを自分で選んで<br />自由にあそぶ</p>
           </div>
           <span className="ml-auto text-green-400 text-xl font-black">▶</span>
+        </button>
+
+        {/* チャレンジモード */}
+        <button
+          onClick={onChallenge}
+          className="w-full bg-gradient-to-br from-red-700/80 to-red-900/90 border border-red-600/50 rounded-2xl p-5 flex items-center gap-4 active:scale-95 transition-all duration-150 shadow-xl hover:from-red-600/80"
+        >
+          <div className="text-left">
+            <p className="text-white font-black text-xl">チャレンジモード</p>
+            <p className="text-red-200 text-sm mt-0.5">手数制限あり！<br />限られた手数でクリアできるか？</p>
+          </div>
+          <span className="ml-auto text-red-400 text-xl font-black">▶</span>
         </button>
 
         {/* 冒険モード */}

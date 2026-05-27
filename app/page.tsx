@@ -4,12 +4,13 @@ import { useState } from "react";
 import ModeSelectScreen from "@/components/ModeSelectScreen";
 import SettingsPanel from "@/components/SettingsPanel";
 import GameScreen from "@/components/GameScreen";
+import ChallengeGameScreen from "@/components/ChallengeGameScreen";
 import LevelSelectScreen from "@/components/LevelSelectScreen";
 import AdventureGameScreen from "@/components/AdventureGameScreen";
 import { Pattern, BoardSize } from "@/lib/gameLogic";
 import { type PatternKey } from "@/lib/levels";
 
-type Screen = "mode-select" | "settings" | "game" | "level-select" | "adventure";
+type Screen = "mode-select" | "settings" | "game" | "challenge-settings" | "challenge" | "level-select" | "adventure";
 
 const FIREFLIES = [
   { top: "8%",  left: "12%", delay: "0s",   dur: "2.8s" },
@@ -72,11 +73,13 @@ export default function Home() {
         {screen === "mode-select" ? (
           <ModeSelectScreen
             onFreeMode={() => setScreen("settings")}
+            onChallenge={() => setScreen("challenge-settings")}
             onAdventure={() => setScreen("level-select")}
           />
         ) : screen === "settings" ? (
           <SettingsPanel
             pattern={pattern} boardSize={boardSize}
+            title="フリーモード"
             onPatternChange={setPattern} onBoardSizeChange={setBoardSize}
             onStart={() => setScreen("game")}
             onBack={() => setScreen("mode-select")}
@@ -84,6 +87,17 @@ export default function Home() {
         ) : screen === "game" ? (
           <GameScreen pattern={pattern} boardSize={boardSize}
             onChangeSettings={() => setScreen("settings")} />
+        ) : screen === "challenge-settings" ? (
+          <SettingsPanel
+            pattern={pattern} boardSize={boardSize}
+            title="チャレンジモード"
+            onPatternChange={setPattern} onBoardSizeChange={setBoardSize}
+            onStart={() => setScreen("challenge")}
+            onBack={() => setScreen("mode-select")}
+          />
+        ) : screen === "challenge" ? (
+          <ChallengeGameScreen pattern={pattern} boardSize={boardSize}
+            onChangeSettings={() => setScreen("challenge-settings")} />
         ) : screen === "level-select" ? (
           <LevelSelectScreen
             onSelectLevel={(pat, sz, idx) => {
