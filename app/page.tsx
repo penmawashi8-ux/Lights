@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ModeSelectScreen from "@/components/ModeSelectScreen";
 import SettingsPanel from "@/components/SettingsPanel";
 import GameScreen from "@/components/GameScreen";
 import LevelSelectScreen from "@/components/LevelSelectScreen";
@@ -8,7 +9,7 @@ import AdventureGameScreen from "@/components/AdventureGameScreen";
 import { Pattern, Difficulty, BoardSize } from "@/lib/gameLogic";
 import { type PatternKey } from "@/lib/levels";
 
-type Screen = "settings" | "game" | "level-select" | "adventure";
+type Screen = "mode-select" | "settings" | "game" | "level-select" | "adventure";
 
 const FIREFLIES = [
   { top: "8%",  left: "12%", delay: "0s",   dur: "2.8s" },
@@ -24,7 +25,7 @@ const FIREFLIES = [
 ];
 
 export default function Home() {
-  const [screen, setScreen] = useState<Screen>("settings");
+  const [screen, setScreen] = useState<Screen>("mode-select");
   const [pattern, setPattern] = useState<Pattern>("plus");
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [boardSize, setBoardSize] = useState<BoardSize>(5);
@@ -70,12 +71,17 @@ export default function Home() {
       </div>
 
       <div className="relative z-10 w-full">
-        {screen === "settings" ? (
+        {screen === "mode-select" ? (
+          <ModeSelectScreen
+            onFreeMode={() => setScreen("settings")}
+            onAdventure={() => setScreen("level-select")}
+          />
+        ) : screen === "settings" ? (
           <SettingsPanel
             pattern={pattern} difficulty={difficulty} boardSize={boardSize}
             onPatternChange={setPattern} onDifficultyChange={setDifficulty} onBoardSizeChange={setBoardSize}
             onStart={() => setScreen("game")}
-            onStartAdventure={() => setScreen("level-select")}
+            onBack={() => setScreen("mode-select")}
           />
         ) : screen === "game" ? (
           <GameScreen pattern={pattern} difficulty={difficulty} boardSize={boardSize}
@@ -86,7 +92,7 @@ export default function Home() {
               setAdvPattern(pat); setAdvSize(sz); setAdvIndex(idx);
               setScreen("adventure");
             }}
-            onBack={() => setScreen("settings")}
+            onBack={() => setScreen("mode-select")}
           />
         ) : (
           <AdventureGameScreen
