@@ -101,14 +101,14 @@ export default function SettingsPanel({
       {/* Settings card */}
       <div className="bg-gradient-to-br from-green-900/60 to-green-950/80 backdrop-blur-sm rounded-3xl p-5 space-y-5 border border-green-700/50 shadow-xl">
         <SelectGroup<Pattern>
-          label="🐾 めくりパターン"
+          label="めくりパターン"
           options={Object.entries(PATTERN_LABELS) as [Pattern, string][]}
           value={pattern}
           onChange={onPatternChange}
         />
         <div className="border-t border-green-700/40" />
         <SelectGroup<BoardSize>
-          label="🌿 ボードサイズ"
+          label="ボードサイズ"
           options={([3, 4, 5, 6] as BoardSize[]).map((s) => [s, `${s}×${s}`])}
           value={boardSize}
           onChange={onBoardSizeChange}
@@ -116,7 +116,7 @@ export default function SettingsPanel({
         <div className="border-t border-green-700/40" />
         {/* Difficulty with icon preview */}
         <div className="space-y-2">
-          <p className="text-sm font-bold text-green-300 tracking-wide">🍀 難易度</p>
+          <p className="text-sm font-bold text-green-300 tracking-wide">難易度</p>
           <div className="flex gap-2">
             {(["easy", "normal", "hard"] as Difficulty[]).map((d) => (
               <button

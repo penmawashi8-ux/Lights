@@ -89,7 +89,7 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
             <div className="absolute -top-2.5 right-6 w-2 h-5 bg-amber-600 rounded-full opacity-80" />
             <div className="bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 rounded-2xl px-5 py-2.5 shadow-xl border-2 border-amber-500/50">
               <p className="text-yellow-100 font-black text-base sm:text-lg leading-tight tracking-wide drop-shadow-md">
-                💡 ポコっとライト
+                ポコっとライト
               </p>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
       {/* Info bar */}
       <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl px-4 py-2.5 flex items-center gap-2 shadow-md border border-amber-200/60">
         <div className="flex-1 min-w-0">
-          <p className="text-green-700 text-xs font-semibold">🐾 パターン</p>
+          <p className="text-green-700 text-xs font-semibold">パターン</p>
           <p className="text-green-900 font-bold text-sm leading-tight truncate">
             {PATTERN_LABELS[pattern]}
           </p>
@@ -118,7 +118,7 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
           <img src="/chars/bear.png" alt="クマ" className="w-11 h-11 object-contain" draggable={false} />
         </div>
         <div className="flex-1 text-center">
-          <p className="text-green-700 text-xs font-semibold">🍀 難易度</p>
+          <p className="text-green-700 text-xs font-semibold">難易度</p>
           <p className={`font-bold text-sm leading-tight ${difficultyColor}`}>
             {DIFFICULTY_LABELS[difficulty]}
           </p>
@@ -135,7 +135,7 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
       {/* Clear banner */}
       {solved && (
         <div className="bg-gradient-to-r from-yellow-400 to-amber-400 border-2 border-yellow-300/80 rounded-2xl p-3 text-center pop-in shadow-lg shadow-yellow-500/30">
-          <p className="text-2xl font-black text-white drop-shadow-md">🎉 全部ついた！クリア！</p>
+          <p className="text-2xl font-black text-white drop-shadow-md">全部ついた！クリア！</p>
           <p className="text-yellow-100 text-sm mt-0.5">{moves} 手でクリアしました！</p>
         </div>
       )}
@@ -160,7 +160,6 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
 
       {/* Hint text */}
       <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl px-4 py-3 flex items-start gap-2.5 border border-amber-200/50 shadow">
-        <span className="text-yellow-500 text-lg flex-shrink-0 mt-0.5">💡</span>
         <p className="text-green-800 text-xs leading-relaxed">{PATTERN_HINTS[pattern]}</p>
       </div>
 
@@ -173,7 +172,7 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
           onClick={newPuzzle}
           className="flex-1 py-3.5 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-base rounded-2xl transition-all duration-150 shadow-lg shadow-green-900/50 border-b-4 border-green-800/60 flex items-center justify-center gap-2"
         >
-          新しいパズル <span>🐾</span>
+          新しいパズル
         </button>
         <div className="flex-shrink-0 float-anim" style={{ animationDelay: "1.2s" }}>
           <img src="/chars/campfire.png" alt="" className="w-14 h-14 object-contain" draggable={false} />
