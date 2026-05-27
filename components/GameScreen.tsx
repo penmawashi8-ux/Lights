@@ -121,11 +121,20 @@ export default function GameScreen({ pattern, boardSize, onChangeSettings }: Gam
         </div>
       </div>
 
-      {/* Clear banner */}
+      {/* Clear popup overlay */}
       {solved && (
-        <div className="bg-gradient-to-r from-yellow-400 to-amber-400 border-2 border-yellow-300/80 rounded-2xl p-3 text-center pop-in shadow-lg shadow-yellow-500/30">
-          <p className="text-2xl font-black text-white drop-shadow-md">全部ついた！クリア！</p>
-          <p className="text-yellow-100 text-sm mt-0.5">{moves} 手でクリアしました！</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <div className="relative pop-in bg-gradient-to-b from-yellow-300 to-amber-400 rounded-3xl p-6 text-center shadow-2xl shadow-yellow-500/40 border-4 border-yellow-200/80 w-full max-w-xs">
+            <p className="text-3xl font-black text-white drop-shadow-md">全部ついた！クリア！</p>
+            <p className="text-yellow-900/80 font-bold text-sm mt-1">{moves} 手でクリアしました！</p>
+            <button
+              onClick={newPuzzle}
+              className="mt-5 w-full py-3 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 active:scale-95 text-white font-black text-base rounded-2xl transition-all shadow-md border-b-2 border-green-900/60"
+            >
+              新しいパズル
+            </button>
+          </div>
         </div>
       )}
 
