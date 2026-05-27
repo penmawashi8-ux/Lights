@@ -4,6 +4,15 @@ import { useState, useEffect, useCallback } from "react";
 import Board from "./Board";
 import Confetti from "./Confetti";
 import {
+  OwlIcon,
+  FoxIcon,
+  BearIcon,
+  RabbitCharacter,
+  RaccoonCharacter,
+  HedgehogCharacter,
+  CampfireIcon,
+} from "./illustrations/Characters";
+import {
   Pattern,
   Difficulty,
   BoardSize,
@@ -94,8 +103,8 @@ export default function GameScreen({
           onClick={onChangeSettings}
           className="flex flex-col items-center gap-0.5 active:scale-90 transition-transform"
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center text-2xl shadow-md border-2 border-green-500/60">
-            🦉
+          <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center shadow-md border-2 border-green-500/60 overflow-hidden">
+            <OwlIcon size={46} />
           </div>
           <span className="text-green-300 text-xs font-bold">メニュー</span>
         </button>
@@ -117,8 +126,8 @@ export default function GameScreen({
           onClick={onChangeSettings}
           className="flex flex-col items-center gap-0.5 active:scale-90 transition-transform"
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center text-2xl shadow-md border-2 border-green-500/60">
-            🦊
+          <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center shadow-md border-2 border-green-500/60 overflow-hidden">
+            <FoxIcon size={46} />
           </div>
           <span className="text-green-300 text-xs font-bold">設定</span>
         </button>
@@ -132,7 +141,9 @@ export default function GameScreen({
             {PATTERN_LABELS[pattern]}
           </p>
         </div>
-        <div className="text-2xl float-anim select-none">🐻</div>
+        <div className="float-anim flex-shrink-0">
+          <BearIcon size={40} />
+        </div>
         <div className="flex-1 text-center">
           <p className="text-green-700 text-xs font-semibold">🍀 難易度</p>
           <p className={`font-bold text-sm leading-tight ${difficultyColor}`}>
@@ -160,10 +171,10 @@ export default function GameScreen({
         </div>
       )}
 
-      {/* Board with side decorations */}
+      {/* Board with side characters */}
       <div className="relative flex items-center justify-center py-1">
-        <div className="absolute -left-1 top-1/2 -translate-y-1/2 text-4xl select-none pointer-events-none float-anim">
-          🐰
+        <div className="absolute -left-2 top-1/2 -translate-y-1/2 select-none pointer-events-none float-anim">
+          <RabbitCharacter size={72} />
         </div>
         <Board
           board={board}
@@ -172,10 +183,10 @@ export default function GameScreen({
           celebrating={celebrating}
         />
         <div
-          className="absolute -right-1 top-1/2 -translate-y-1/2 text-4xl select-none pointer-events-none float-anim"
+          className="absolute -right-2 top-1/2 -translate-y-1/2 select-none pointer-events-none float-anim"
           style={{ animationDelay: "0.8s" }}
         >
-          🦝
+          <RaccoonCharacter size={72} />
         </div>
       </div>
 
@@ -194,25 +205,25 @@ export default function GameScreen({
         </p>
       </div>
 
-      {/* Bottom row: animals + new puzzle button */}
+      {/* Bottom row: characters + new puzzle button */}
       <div className="flex items-end gap-2">
         <div
-          className="text-3xl select-none float-anim"
+          className="flex-shrink-0 select-none float-anim"
           style={{ animationDelay: "0.4s" }}
         >
-          🦔
+          <HedgehogCharacter size={52} />
         </div>
         <button
           onClick={newPuzzle}
           className="flex-1 py-3.5 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-base rounded-2xl transition-all duration-150 shadow-lg shadow-green-900/50 border-b-4 border-green-800/60 flex items-center justify-center gap-2"
         >
-          新しいパズル <span className="text-lg">🐾</span>
+          新しいパズル <span className="text-base">🐾</span>
         </button>
         <div
-          className="text-3xl select-none float-anim"
+          className="flex-shrink-0 select-none float-anim"
           style={{ animationDelay: "1.2s" }}
         >
-          🔥
+          <CampfireIcon size={52} />
         </div>
       </div>
     </div>

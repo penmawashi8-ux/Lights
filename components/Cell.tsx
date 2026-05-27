@@ -1,5 +1,7 @@
 "use client";
 
+import { StarIcon, LeafIcon } from "./illustrations/Characters";
+
 interface CellProps {
   on: boolean;
   onClick: () => void;
@@ -8,10 +10,16 @@ interface CellProps {
 
 export default function Cell({ on, onClick, size }: CellProps) {
   const dims =
-    size === 3 ? "w-20 h-20 sm:w-24 sm:h-24 text-3xl" :
-    size === 4 ? "w-16 h-16 sm:w-20 sm:h-20 text-2xl" :
-    size === 5 ? "w-12 h-12 sm:w-15 sm:h-15 text-xl" :
-    "w-10 h-10 sm:w-12 sm:h-12 text-base";
+    size === 3 ? "w-20 h-20 sm:w-24 sm:h-24" :
+    size === 4 ? "w-16 h-16 sm:w-20 sm:h-20" :
+    size === 5 ? "w-12 h-12 sm:w-15 sm:h-15" :
+    "w-10 h-10 sm:w-12 sm:h-12";
+
+  const iconSize =
+    size === 3 ? 36 :
+    size === 4 ? 30 :
+    size === 5 ? 24 :
+    20;
 
   return (
     <button
@@ -27,7 +35,10 @@ export default function Cell({ on, onClick, size }: CellProps) {
       ].join(" ")}
       aria-label={on ? "ライト ON" : "ライト OFF"}
     >
-      {on ? "⭐" : "🍃"}
+      {on
+        ? <StarIcon size={iconSize} />
+        : <LeafIcon size={iconSize} />
+      }
     </button>
   );
 }
