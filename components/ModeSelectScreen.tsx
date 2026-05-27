@@ -44,9 +44,6 @@ export default function ModeSelectScreen({
           onClick={onFreeMode}
           className="w-full bg-gradient-to-br from-green-700/80 to-green-900/90 border border-green-600/50 rounded-2xl p-5 flex items-center gap-4 active:scale-95 transition-all duration-150 shadow-xl hover:from-green-600/80"
         >
-          <div className="w-16 h-16 bg-gradient-to-b from-green-500 to-green-700 rounded-2xl flex items-center justify-center shadow-lg border-b-4 border-green-800/60 flex-shrink-0">
-            <span className="text-3xl">🎲</span>
-          </div>
           <div className="text-left">
             <p className="text-white font-black text-xl">フリーモード</p>
             <p className="text-green-300 text-sm mt-0.5">パターン・サイズ・難易度を<br />自分で選んで自由にあそぶ</p>
