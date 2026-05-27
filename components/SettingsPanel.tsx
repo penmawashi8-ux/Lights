@@ -7,6 +7,15 @@ import {
   PATTERN_LABELS,
   DIFFICULTY_LABELS,
 } from "@/lib/gameLogic";
+import {
+  OwlIcon,
+  FoxIcon,
+  BearIcon,
+  RabbitCharacter,
+  RaccoonCharacter,
+  HedgehogCharacter,
+  CampfireIcon,
+} from "./illustrations/Characters";
 
 interface SettingsPanelProps {
   pattern: Pattern;
@@ -79,12 +88,20 @@ export default function SettingsPanel({
         </p>
       </div>
 
-      {/* Decorative animals */}
-      <div className="flex justify-around text-4xl px-4 select-none">
-        <span className="float-anim" style={{ animationDelay: "0s" }}>🦉</span>
-        <span className="float-anim" style={{ animationDelay: "0.5s" }}>🐰</span>
-        <span className="float-anim" style={{ animationDelay: "1s" }}>🦔</span>
-        <span className="float-anim" style={{ animationDelay: "1.5s" }}>🦊</span>
+      {/* Character decorations */}
+      <div className="flex items-end justify-around px-2">
+        <div className="float-anim" style={{ animationDelay: "0s" }}>
+          <OwlIcon size={52} />
+        </div>
+        <div className="float-anim" style={{ animationDelay: "0.5s" }}>
+          <RabbitCharacter size={64} />
+        </div>
+        <div className="float-anim" style={{ animationDelay: "1s" }}>
+          <BearIcon size={44} />
+        </div>
+        <div className="float-anim" style={{ animationDelay: "1.5s" }}>
+          <FoxIcon size={52} />
+        </div>
       </div>
 
       {/* Settings card */}
@@ -119,11 +136,17 @@ export default function SettingsPanel({
         🌟 ゲームスタート
       </button>
 
-      {/* Bottom decoration */}
-      <div className="text-center text-3xl select-none space-x-3">
-        <span>🐻</span>
-        <span>🔥</span>
-        <span>🦝</span>
+      {/* Bottom characters */}
+      <div className="flex items-end justify-around px-4">
+        <div className="float-anim" style={{ animationDelay: "0.3s" }}>
+          <HedgehogCharacter size={54} />
+        </div>
+        <div className="float-anim" style={{ animationDelay: "0.8s" }}>
+          <CampfireIcon size={52} />
+        </div>
+        <div className="float-anim" style={{ animationDelay: "1.3s" }}>
+          <RaccoonCharacter size={64} />
+        </div>
       </div>
     </div>
   );
