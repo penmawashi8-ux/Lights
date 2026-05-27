@@ -4,23 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import Board from "./Board";
 import Confetti from "./Confetti";
 import {
-  OwlIcon,
-  FoxIcon,
-  BearIcon,
-  RabbitCharacter,
-  RaccoonCharacter,
-  HedgehogCharacter,
-  CampfireIcon,
-} from "./illustrations/Characters";
-import {
-  Pattern,
-  Difficulty,
-  BoardSize,
-  PATTERN_LABELS,
-  DIFFICULTY_LABELS,
-  generatePuzzle,
-  getAffectedCells,
-  isSolved,
+  Pattern, Difficulty, BoardSize,
+  PATTERN_LABELS, DIFFICULTY_LABELS,
+  generatePuzzle, getAffectedCells, isSolved,
 } from "@/lib/gameLogic";
 
 const PATTERN_HINTS: Record<Pattern, string> = {
@@ -38,12 +24,7 @@ interface GameScreenProps {
   onChangeSettings: () => void;
 }
 
-export default function GameScreen({
-  pattern,
-  difficulty,
-  boardSize,
-  onChangeSettings,
-}: GameScreenProps) {
+export default function GameScreen({ pattern, difficulty, boardSize, onChangeSettings }: GameScreenProps) {
   const [board, setBoard] = useState<boolean[][]>(() =>
     generatePuzzle(boardSize, pattern, difficulty)
   );
@@ -60,21 +41,16 @@ export default function GameScreen({
     setShowConfetti(false);
   }, [boardSize, pattern, difficulty]);
 
-  const handleCellClick = useCallback(
-    (row: number, col: number) => {
-      if (solved) return;
-      setBoard((prev) => {
-        const next = prev.map((r) => [...r]);
-        const affected = getAffectedCells(row, col, boardSize, pattern);
-        for (const [r, c] of affected) {
-          next[r][c] = !next[r][c];
-        }
-        return next;
-      });
-      setMoves((m) => m + 1);
-    },
-    [solved, boardSize, pattern]
-  );
+  const handleCellClick = useCallback((row: number, col: number) => {
+    if (solved) return;
+    setBoard((prev) => {
+      const next = prev.map((r) => [...r]);
+      const affected = getAffectedCells(row, col, boardSize, pattern);
+      for (const [r, c] of affected) next[r][c] = !next[r][c];
+      return next;
+    });
+    setMoves((m) => m + 1);
+  }, [solved, boardSize, pattern]);
 
   useEffect(() => {
     if (!solved && isSolved(board)) {
@@ -87,11 +63,8 @@ export default function GameScreen({
   }, [board, solved]);
 
   const difficultyColor =
-    difficulty === "easy"
-      ? "text-emerald-600"
-      : difficulty === "normal"
-      ? "text-amber-600"
-      : "text-red-600";
+    difficulty === "easy" ? "text-emerald-600" :
+    difficulty === "normal" ? "text-amber-600" : "text-red-600";
 
   return (
     <div className="w-full max-w-sm mx-auto space-y-3 fade-in-up">
@@ -104,7 +77,7 @@ export default function GameScreen({
           className="flex flex-col items-center gap-0.5 active:scale-90 transition-transform"
         >
           <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center shadow-md border-2 border-green-500/60 overflow-hidden">
-            <OwlIcon size={46} />
+            <img src="/chars/owl.png" alt="メニュー" className="w-11 h-11 object-contain" draggable={false} />
           </div>
           <span className="text-green-300 text-xs font-bold">メニュー</span>
         </button>
@@ -127,7 +100,7 @@ export default function GameScreen({
           className="flex flex-col items-center gap-0.5 active:scale-90 transition-transform"
         >
           <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center shadow-md border-2 border-green-500/60 overflow-hidden">
-            <FoxIcon size={46} />
+            <img src="/chars/fox.png" alt="設定" className="w-11 h-11 object-contain" draggable={false} />
           </div>
           <span className="text-green-300 text-xs font-bold">設定</span>
         </button>
@@ -142,7 +115,7 @@ export default function GameScreen({
           </p>
         </div>
         <div className="float-anim flex-shrink-0">
-          <BearIcon size={40} />
+          <img src="/chars/bear.png" alt="クマ" className="w-11 h-11 object-contain" draggable={false} />
         </div>
         <div className="flex-1 text-center">
           <p className="text-green-700 text-xs font-semibold">🍀 難易度</p>
@@ -151,42 +124,30 @@ export default function GameScreen({
           </p>
         </div>
         <div className="w-px h-8 bg-green-200/80" />
-        <div className="text-center w-12 flex-shrink-0">
-          <p className="text-green-700 text-xs font-semibold">手数</p>
-          <p className="text-green-900 font-black text-2xl tabular-nums leading-tight">
-            {moves}
+        <div className="text-center w-14 flex-shrink-0">
+          <p className="text-green-700 text-xs font-semibold flex items-center justify-center gap-0.5">
+            <img src="/icons/acorn.png" alt="" className="w-4 h-4 object-contain inline" />手数
           </p>
+          <p className="text-green-900 font-black text-2xl tabular-nums leading-tight">{moves}</p>
         </div>
       </div>
 
       {/* Clear banner */}
       {solved && (
         <div className="bg-gradient-to-r from-yellow-400 to-amber-400 border-2 border-yellow-300/80 rounded-2xl p-3 text-center pop-in shadow-lg shadow-yellow-500/30">
-          <p className="text-2xl font-black text-white drop-shadow-md">
-            🎉 全部ついた！クリア！
-          </p>
-          <p className="text-yellow-100 text-sm mt-0.5">
-            {moves} 手でクリアしました！⭐
-          </p>
+          <p className="text-2xl font-black text-white drop-shadow-md">🎉 全部ついた！クリア！</p>
+          <p className="text-yellow-100 text-sm mt-0.5">{moves} 手でクリアしました！</p>
         </div>
       )}
 
       {/* Board with side characters */}
       <div className="relative flex items-center justify-center py-1">
-        <div className="absolute -left-2 top-1/2 -translate-y-1/2 select-none pointer-events-none float-anim">
-          <RabbitCharacter size={72} />
+        <div className="absolute -left-3 top-1/2 -translate-y-1/2 select-none pointer-events-none float-anim">
+          <img src="/chars/rabbit.png" alt="" className="w-16 h-16 object-contain" draggable={false} />
         </div>
-        <Board
-          board={board}
-          size={boardSize}
-          onCellClick={handleCellClick}
-          celebrating={celebrating}
-        />
-        <div
-          className="absolute -right-2 top-1/2 -translate-y-1/2 select-none pointer-events-none float-anim"
-          style={{ animationDelay: "0.8s" }}
-        >
-          <RaccoonCharacter size={72} />
+        <Board board={board} size={boardSize} onCellClick={handleCellClick} celebrating={celebrating} />
+        <div className="absolute -right-3 top-1/2 -translate-y-1/2 select-none pointer-events-none float-anim" style={{ animationDelay: "0.8s" }}>
+          <img src="/chars/raccoon.png" alt="" className="w-16 h-16 object-contain" draggable={false} />
         </div>
       </div>
 
@@ -200,30 +161,22 @@ export default function GameScreen({
       {/* Hint text */}
       <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl px-4 py-3 flex items-start gap-2.5 border border-amber-200/50 shadow">
         <span className="text-yellow-500 text-lg flex-shrink-0 mt-0.5">💡</span>
-        <p className="text-green-800 text-xs leading-relaxed">
-          {PATTERN_HINTS[pattern]}
-        </p>
+        <p className="text-green-800 text-xs leading-relaxed">{PATTERN_HINTS[pattern]}</p>
       </div>
 
-      {/* Bottom row: characters + new puzzle button */}
+      {/* Bottom row */}
       <div className="flex items-end gap-2">
-        <div
-          className="flex-shrink-0 select-none float-anim"
-          style={{ animationDelay: "0.4s" }}
-        >
-          <HedgehogCharacter size={52} />
+        <div className="flex-shrink-0 float-anim" style={{ animationDelay: "0.4s" }}>
+          <img src="/chars/hedgehog.png" alt="" className="w-14 h-14 object-contain" draggable={false} />
         </div>
         <button
           onClick={newPuzzle}
           className="flex-1 py-3.5 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-base rounded-2xl transition-all duration-150 shadow-lg shadow-green-900/50 border-b-4 border-green-800/60 flex items-center justify-center gap-2"
         >
-          新しいパズル <span className="text-base">🐾</span>
+          新しいパズル <span>🐾</span>
         </button>
-        <div
-          className="flex-shrink-0 select-none float-anim"
-          style={{ animationDelay: "1.2s" }}
-        >
-          <CampfireIcon size={52} />
+        <div className="flex-shrink-0 float-anim" style={{ animationDelay: "1.2s" }}>
+          <img src="/chars/campfire.png" alt="" className="w-14 h-14 object-contain" draggable={false} />
         </div>
       </div>
     </div>

@@ -1,7 +1,5 @@
 "use client";
 
-import { StarIcon, LeafIcon } from "./illustrations/Characters";
-
 interface CellProps {
   on: boolean;
   onClick: () => void;
@@ -15,30 +13,23 @@ export default function Cell({ on, onClick, size }: CellProps) {
     size === 5 ? "w-12 h-12 sm:w-15 sm:h-15" :
     "w-10 h-10 sm:w-12 sm:h-12";
 
-  const iconSize =
-    size === 3 ? 36 :
-    size === 4 ? 30 :
-    size === 5 ? 24 :
-    20;
-
   return (
     <button
       onClick={onClick}
       className={[
         dims,
-        "rounded-2xl transition-all duration-200 active:scale-90",
-        "flex items-center justify-center select-none",
+        "rounded-2xl overflow-hidden transition-all duration-200 active:scale-90",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300",
-        on
-          ? "bg-gradient-to-br from-yellow-300 to-amber-400 cell-on border-2 border-yellow-200/80 shadow-lg shadow-yellow-400/50"
-          : "bg-gradient-to-br from-green-900 to-green-950 hover:from-green-800 hover:to-green-900 border-2 border-green-700/50 shadow-inner shadow-black/40",
+        on ? "cell-on shadow-lg shadow-yellow-400/50" : "hover:brightness-110",
       ].join(" ")}
       aria-label={on ? "ライト ON" : "ライト OFF"}
     >
-      {on
-        ? <StarIcon size={iconSize} />
-        : <LeafIcon size={iconSize} />
-      }
+      <img
+        src={on ? "/icons/star.png" : "/icons/leaf.png"}
+        alt={on ? "ON" : "OFF"}
+        className="w-full h-full object-cover"
+        draggable={false}
+      />
     </button>
   );
 }
