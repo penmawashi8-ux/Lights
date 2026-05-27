@@ -8,6 +8,7 @@ import {
 interface SettingsPanelProps {
   pattern: Pattern;
   boardSize: BoardSize;
+  title?: string;
   onPatternChange: (p: Pattern) => void;
   onBoardSizeChange: (s: BoardSize) => void;
   onStart: () => void;
@@ -50,6 +51,7 @@ function SelectGroup<T extends string | number>({
 
 export default function SettingsPanel({
   pattern, boardSize,
+  title = "フリーモード",
   onPatternChange, onBoardSizeChange, onStart, onBack,
 }: SettingsPanelProps) {
   return (
@@ -69,7 +71,7 @@ export default function SettingsPanel({
             <div className="absolute -top-2.5 left-6 w-2 h-5 bg-amber-600 rounded-full opacity-80" />
             <div className="absolute -top-2.5 right-6 w-2 h-5 bg-amber-600 rounded-full opacity-80" />
             <div className="bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 rounded-2xl px-6 py-2.5 shadow-xl border-2 border-amber-500/50">
-              <p className="text-yellow-100 font-black text-base drop-shadow-md">フリーモード</p>
+              <p className="text-yellow-100 font-black text-base drop-shadow-md">{title}</p>
             </div>
           </div>
         </div>
