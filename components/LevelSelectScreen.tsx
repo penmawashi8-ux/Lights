@@ -38,7 +38,7 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
   if (step === "pattern") {
     return (
       <div className="w-full max-w-sm mx-auto fade-in-up space-y-4">
-        <Header onBack={onBack} title="🏔️ 冒険モード" />
+        <Header onBack={onBack} title="冒険モード" />
 
         <div className="bg-green-900/50 rounded-2xl px-4 py-2 border border-green-700/40 flex justify-between items-center">
           <span className="text-green-300 text-sm">全クリア済み</span>
@@ -63,7 +63,7 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
                 <div className="text-white font-bold text-sm">{d.label}</div>
                 <div className="text-green-300 text-xs mt-0.5 leading-tight">{d.desc}</div>
                 <div className="mt-2 text-yellow-400 text-xs font-semibold">
-                  ⭐ {cleared} / 400
+                  {cleared} / 400
                 </div>
               </button>
             );
@@ -77,7 +77,7 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
   if (step === "size") {
     return (
       <div className="w-full max-w-sm mx-auto fade-in-up space-y-4">
-        <Header onBack={() => setStep("pattern")} title={`${PATTERN_DISPLAY[pattern].emoji} ${PATTERN_DISPLAY[pattern].label}`} />
+        <Header onBack={() => setStep("pattern")} title={PATTERN_DISPLAY[pattern].label} />
 
         <p className="text-green-300 text-sm text-center font-semibold">ボードサイズを選ぼう</p>
 
@@ -94,10 +94,10 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
                 <div className="text-2xl font-black text-yellow-200 mb-1">{s}×{s}</div>
                 <div className="text-green-300 text-xs">ボード</div>
                 <div className="mt-2 text-yellow-400 text-xs font-semibold">
-                  ⭐ {cleared.size} / 100
+                  {cleared.size} / 100
                 </div>
                 <div className="text-green-400 text-xs">
-                  🔓 Lv {unlocked + 1} まで解放
+                  Lv {unlocked + 1} まで解放
                 </div>
               </button>
             );
@@ -120,7 +120,7 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
     <div className="w-full max-w-sm mx-auto fade-in-up space-y-3">
       <Header
         onBack={() => setStep("size")}
-        title={`${PATTERN_DISPLAY[pattern].emoji} ${PATTERN_DISPLAY[pattern].label} — ${size}×${size}`}
+        title={`${PATTERN_DISPLAY[pattern].label} — ${size}×${size}`}
       />
 
       <div className="bg-green-900/50 rounded-2xl px-4 py-2 border border-green-700/40 flex justify-between items-center">
@@ -156,13 +156,8 @@ export default function LevelSelectScreen({ onSelectLevel, onBack }: Props) {
                 isNext ? "ring-2 ring-yellow-400 ring-offset-1 ring-offset-transparent animate-pulse" : "",
               ].filter(Boolean).join(" ")}
             >
-              {isLocked ? (
-                <span className="text-[10px] opacity-60">🔒</span>
-              ) : (
-                <>
-                  <span className="leading-none">{i + 1}</span>
-                  {isCleared && <span className="text-[8px] leading-none">⭐</span>}
-                </>
+              {!isLocked && (
+                <span className="leading-none">{i + 1}</span>
               )}
             </button>
           );

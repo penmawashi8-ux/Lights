@@ -80,7 +80,7 @@ export default function AdventureGameScreen({ pattern, size, levelIndex, onCompl
             <div className="absolute -top-2.5 right-5 w-2 h-5 bg-amber-600 rounded-full opacity-80" />
             <div className="bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 rounded-2xl px-5 py-2.5 shadow-xl border-2 border-amber-500/50">
               <p className="text-yellow-100 font-black text-base leading-tight drop-shadow-md">
-                🏔️ 冒険モード
+                冒険モード
               </p>
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function AdventureGameScreen({ pattern, size, levelIndex, onCompl
       {/* Move counter */}
       <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl px-4 py-2.5 flex items-center gap-2 shadow-md border border-amber-200/60">
         <div className="flex-1">
-          <p className="text-green-700 text-xs font-semibold">🐾 パターン</p>
+          <p className="text-green-700 text-xs font-semibold">パターン</p>
           <p className="text-green-900 font-bold text-sm truncate">{PATTERN_DISPLAY[pattern].label}</p>
         </div>
         <div className="w-px h-8 bg-green-200/80" />
@@ -118,7 +118,7 @@ export default function AdventureGameScreen({ pattern, size, levelIndex, onCompl
       {/* Clear banner */}
       {solved && (
         <div className="bg-gradient-to-r from-yellow-400 to-amber-400 border-2 border-yellow-300/80 rounded-2xl p-3 text-center pop-in shadow-lg shadow-yellow-500/30">
-          <p className="text-2xl font-black text-white drop-shadow-md">🎉 ステージクリア！</p>
+          <p className="text-2xl font-black text-white drop-shadow-md">ステージクリア！</p>
           <p className="text-yellow-100 text-sm mt-0.5">{moves} 手でクリア！</p>
           <div className="flex gap-2 mt-3 justify-center">
             <button
