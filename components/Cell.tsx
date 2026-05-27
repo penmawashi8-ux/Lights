@@ -18,21 +18,19 @@ export default function Cell({ on, onClick, size }: CellProps) {
       onClick={onClick}
       className={[
         dims,
-        "rounded-2xl transition-all duration-200 active:scale-90",
+        "rounded-2xl overflow-hidden transition-all duration-200 active:scale-90",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300",
-        on ? "cell-on" : "hover:brightness-110",
+        on ? "cell-on" : "hover:brightness-125",
       ].join(" ")}
+      style={{ WebkitMaskImage: "radial-gradient(white, black)" }}
       aria-label={on ? "ライト ON" : "ライト OFF"}
     >
-      {/* Inner wrapper forces proper overflow clipping on iOS Safari */}
-      <div className="w-full h-full rounded-2xl overflow-hidden">
-        <img
-          src={on ? "/icons/star.png" : "/icons/leaf.png"}
-          alt={on ? "ON" : "OFF"}
-          className="w-full h-full object-cover"
-          draggable={false}
-        />
-      </div>
+      <img
+        src={on ? "/icons/star.png" : "/icons/leaf.png"}
+        alt={on ? "ON" : "OFF"}
+        className="w-full h-full object-cover"
+        draggable={false}
+      />
     </button>
   );
 }
