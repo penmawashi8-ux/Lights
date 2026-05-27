@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import Board from "./Board";
 import Confetti from "./Confetti";
 import {
-  Pattern, Difficulty, BoardSize,
-  PATTERN_LABELS, DIFFICULTY_LABELS,
+  Pattern, BoardSize,
+  PATTERN_LABELS,
   generatePuzzle, getAffectedCells, isSolved,
 } from "@/lib/gameLogic";
 
@@ -19,14 +19,13 @@ const PATTERN_HINTS: Record<Pattern, string> = {
 
 interface GameScreenProps {
   pattern: Pattern;
-  difficulty: Difficulty;
   boardSize: BoardSize;
   onChangeSettings: () => void;
 }
 
-export default function GameScreen({ pattern, difficulty, boardSize, onChangeSettings }: GameScreenProps) {
+export default function GameScreen({ pattern, boardSize, onChangeSettings }: GameScreenProps) {
   const [board, setBoard] = useState<boolean[][]>(() =>
-    generatePuzzle(boardSize, pattern, difficulty)
+    generatePuzzle(boardSize, pattern)
   );
   const [moves, setMoves] = useState(0);
   const [solved, setSolved] = useState(false);
@@ -34,12 +33,12 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
   const [showConfetti, setShowConfetti] = useState(false);
 
   const newPuzzle = useCallback(() => {
-    setBoard(generatePuzzle(boardSize, pattern, difficulty));
+    setBoard(generatePuzzle(boardSize, pattern));
     setMoves(0);
     setSolved(false);
     setCelebrating(false);
     setShowConfetti(false);
-  }, [boardSize, pattern, difficulty]);
+  }, [boardSize, pattern]);
 
   const handleCellClick = useCallback((row: number, col: number) => {
     if (solved) return;
@@ -61,10 +60,6 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
       return () => clearTimeout(t);
     }
   }, [board, solved]);
-
-  const difficultyColor =
-    difficulty === "easy" ? "text-emerald-600" :
-    difficulty === "normal" ? "text-amber-600" : "text-red-600";
 
   return (
     <div className="w-full max-w-sm mx-auto space-y-3 fade-in-up">
@@ -116,12 +111,6 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
         </div>
         <div className="float-anim flex-shrink-0">
           <img src="/chars/bear.png" alt="クマ" className="w-11 h-11 object-contain" draggable={false} />
-        </div>
-        <div className="flex-1 text-center">
-          <p className="text-green-700 text-xs font-semibold">難易度</p>
-          <p className={`font-bold text-sm leading-tight ${difficultyColor}`}>
-            {DIFFICULTY_LABELS[difficulty]}
-          </p>
         </div>
         <div className="w-px h-8 bg-green-200/80" />
         <div className="text-center w-14 flex-shrink-0">

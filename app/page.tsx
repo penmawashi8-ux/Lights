@@ -6,7 +6,7 @@ import SettingsPanel from "@/components/SettingsPanel";
 import GameScreen from "@/components/GameScreen";
 import LevelSelectScreen from "@/components/LevelSelectScreen";
 import AdventureGameScreen from "@/components/AdventureGameScreen";
-import { Pattern, Difficulty, BoardSize } from "@/lib/gameLogic";
+import { Pattern, BoardSize } from "@/lib/gameLogic";
 import { type PatternKey } from "@/lib/levels";
 
 type Screen = "mode-select" | "settings" | "game" | "level-select" | "adventure";
@@ -27,7 +27,6 @@ const FIREFLIES = [
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("mode-select");
   const [pattern, setPattern] = useState<Pattern>("plus");
-  const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [boardSize, setBoardSize] = useState<BoardSize>(5);
 
   // Adventure mode state
@@ -41,7 +40,6 @@ export default function Home() {
       setAdvPattern(pat);
       setAdvSize(sz);
       setAdvIndex(nextIdx);
-      // stay on "adventure" — key change causes re-mount
     } else {
       setScreen("level-select");
     }
@@ -78,13 +76,13 @@ export default function Home() {
           />
         ) : screen === "settings" ? (
           <SettingsPanel
-            pattern={pattern} difficulty={difficulty} boardSize={boardSize}
-            onPatternChange={setPattern} onDifficultyChange={setDifficulty} onBoardSizeChange={setBoardSize}
+            pattern={pattern} boardSize={boardSize}
+            onPatternChange={setPattern} onBoardSizeChange={setBoardSize}
             onStart={() => setScreen("game")}
             onBack={() => setScreen("mode-select")}
           />
         ) : screen === "game" ? (
-          <GameScreen pattern={pattern} difficulty={difficulty} boardSize={boardSize}
+          <GameScreen pattern={pattern} boardSize={boardSize}
             onChangeSettings={() => setScreen("settings")} />
         ) : screen === "level-select" ? (
           <LevelSelectScreen
