@@ -69,6 +69,14 @@ export default function Home() {
         <span>🌲</span><span>🌳</span><span>🌲</span><span>🌳</span><span>🌲</span><span>🌳</span>
       </div>
 
+      {/* Back to top link */}
+      <a
+        href="https://boardgamecat.com"
+        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-black/40 border border-green-700/50 text-green-400 text-xs font-medium hover:bg-black/60 hover:text-green-300 transition-all duration-150 backdrop-blur-sm"
+      >
+        ◀ boardgamecat.com
+      </a>
+
       <div className="relative z-10 w-full">
         {screen === "mode-select" ? (
           <ModeSelectScreen
