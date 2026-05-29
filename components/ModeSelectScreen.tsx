@@ -90,6 +90,16 @@ export default function ModeSelectScreen({
           </div>
         ))}
       </div>
+
+      {/* トップへ戻るボタン */}
+      <div className="flex justify-center pt-1">
+        <a
+          href="https://boardgamecat.com"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-b from-amber-700 to-amber-900 border-2 border-amber-500/70 text-amber-100 text-sm font-black shadow-lg shadow-black/50 active:scale-95 hover:from-amber-600 hover:to-amber-800 transition-all duration-150"
+        >
+          ◀ トップへ戻る
+        </a>
+      </div>
     </div>
   );
 }
