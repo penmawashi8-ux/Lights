@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import Board from "./Board";
 import Confetti from "./Confetti";
 import {
-  Pattern, Difficulty, BoardSize,
-  PATTERN_LABELS, DIFFICULTY_LABELS,
+  Pattern, BoardSize,
+  PATTERN_LABELS,
   generatePuzzle, getAffectedCells, isSolved,
 } from "@/lib/gameLogic";
 
@@ -19,14 +19,13 @@ const PATTERN_HINTS: Record<Pattern, string> = {
 
 interface GameScreenProps {
   pattern: Pattern;
-  difficulty: Difficulty;
   boardSize: BoardSize;
   onChangeSettings: () => void;
 }
 
-export default function GameScreen({ pattern, difficulty, boardSize, onChangeSettings }: GameScreenProps) {
+export default function GameScreen({ pattern, boardSize, onChangeSettings }: GameScreenProps) {
   const [board, setBoard] = useState<boolean[][]>(() =>
-    generatePuzzle(boardSize, pattern, difficulty)
+    generatePuzzle(boardSize, pattern)
   );
   const [moves, setMoves] = useState(0);
   const [solved, setSolved] = useState(false);
@@ -34,12 +33,12 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
   const [showConfetti, setShowConfetti] = useState(false);
 
   const newPuzzle = useCallback(() => {
-    setBoard(generatePuzzle(boardSize, pattern, difficulty));
+    setBoard(generatePuzzle(boardSize, pattern));
     setMoves(0);
     setSolved(false);
     setCelebrating(false);
     setShowConfetti(false);
-  }, [boardSize, pattern, difficulty]);
+  }, [boardSize, pattern]);
 
   const handleCellClick = useCallback((row: number, col: number) => {
     if (solved) return;
@@ -61,10 +60,6 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
       return () => clearTimeout(t);
     }
   }, [board, solved]);
-
-  const difficultyColor =
-    difficulty === "easy" ? "text-emerald-600" :
-    difficulty === "normal" ? "text-amber-600" : "text-red-600";
 
   return (
     <div className="w-full max-w-sm mx-auto space-y-3 fade-in-up">
@@ -89,7 +84,7 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
             <div className="absolute -top-2.5 right-6 w-2 h-5 bg-amber-600 rounded-full opacity-80" />
             <div className="bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 rounded-2xl px-5 py-2.5 shadow-xl border-2 border-amber-500/50">
               <p className="text-yellow-100 font-black text-base sm:text-lg leading-tight tracking-wide drop-shadow-md">
-                💡 ポコっとライト
+                ポコっとライト
               </p>
             </div>
           </div>
@@ -109,19 +104,13 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
       {/* Info bar */}
       <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl px-4 py-2.5 flex items-center gap-2 shadow-md border border-amber-200/60">
         <div className="flex-1 min-w-0">
-          <p className="text-green-700 text-xs font-semibold">🐾 パターン</p>
+          <p className="text-green-700 text-xs font-semibold">パターン</p>
           <p className="text-green-900 font-bold text-sm leading-tight truncate">
             {PATTERN_LABELS[pattern]}
           </p>
         </div>
         <div className="float-anim flex-shrink-0">
           <img src="/chars/bear.png" alt="クマ" className="w-11 h-11 object-contain" draggable={false} />
-        </div>
-        <div className="flex-1 text-center">
-          <p className="text-green-700 text-xs font-semibold">🍀 難易度</p>
-          <p className={`font-bold text-sm leading-tight ${difficultyColor}`}>
-            {DIFFICULTY_LABELS[difficulty]}
-          </p>
         </div>
         <div className="w-px h-8 bg-green-200/80" />
         <div className="text-center w-14 flex-shrink-0">
@@ -132,11 +121,20 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
         </div>
       </div>
 
-      {/* Clear banner */}
+      {/* Clear popup overlay */}
       {solved && (
-        <div className="bg-gradient-to-r from-yellow-400 to-amber-400 border-2 border-yellow-300/80 rounded-2xl p-3 text-center pop-in shadow-lg shadow-yellow-500/30">
-          <p className="text-2xl font-black text-white drop-shadow-md">🎉 全部ついた！クリア！</p>
-          <p className="text-yellow-100 text-sm mt-0.5">{moves} 手でクリアしました！</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <div className="relative pop-in bg-gradient-to-b from-yellow-300 to-amber-400 rounded-3xl p-6 text-center shadow-2xl shadow-yellow-500/40 border-4 border-yellow-200/80 w-full max-w-xs">
+            <p className="text-3xl font-black text-white drop-shadow-md">全部ついた！クリア！</p>
+            <p className="text-yellow-900/80 font-bold text-sm mt-1">{moves} 手でクリアしました！</p>
+            <button
+              onClick={newPuzzle}
+              className="mt-5 w-full py-3 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 active:scale-95 text-white font-black text-base rounded-2xl transition-all shadow-md border-b-2 border-green-900/60"
+            >
+              新しいパズル
+            </button>
+          </div>
         </div>
       )}
 
@@ -160,7 +158,6 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
 
       {/* Hint text */}
       <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl px-4 py-3 flex items-start gap-2.5 border border-amber-200/50 shadow">
-        <span className="text-yellow-500 text-lg flex-shrink-0 mt-0.5">💡</span>
         <p className="text-green-800 text-xs leading-relaxed">{PATTERN_HINTS[pattern]}</p>
       </div>
 
@@ -173,7 +170,7 @@ export default function GameScreen({ pattern, difficulty, boardSize, onChangeSet
           onClick={newPuzzle}
           className="flex-1 py-3.5 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 active:scale-95 text-white font-black text-base rounded-2xl transition-all duration-150 shadow-lg shadow-green-900/50 border-b-4 border-green-800/60 flex items-center justify-center gap-2"
         >
-          新しいパズル <span>🐾</span>
+          新しいパズル
         </button>
         <div className="flex-shrink-0 float-anim" style={{ animationDelay: "1.2s" }}>
           <img src="/chars/campfire.png" alt="" className="w-14 h-14 object-contain" draggable={false} />
