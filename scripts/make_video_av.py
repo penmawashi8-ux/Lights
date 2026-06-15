@@ -30,22 +30,22 @@ OUT = os.path.join(ROOT, "media", "poko-light-cross4x4-short-bgm.mp4")
 # ---------------------------------------------------------------- ナレーション
 # pyopenjtalk -> /tmp/narr/nNN.wav -> atempo 1.3 -> /tmp/narr_s/nNN.wav を作る
 NARR_TEXT = [
- "きょうは、ポコっとライトを、じっきょう かいせつ！",
- "じゅうじがた、プラスがたの、よんバイよんを、やさしく こうりゃくしていくよ。",
- "くらいマスを、ぜんぶ てんとうさせたら クリアの、ライトパズル！",
- "マスを おすと…",
- "おしたマスと、じょうげさゆう、あわせて ごマスが きりかわる！",
- "この じゅうじの うごきを つかって、ぜんぶを てんとうさせよう！",
- "コツは、ライトチェイス。くらいマスの したを、おしていくだけ！",
- "いちだんめの くらいマスは、すぐ したを おす。",
- "となりの くらいマスも、したを おして てんとう。",
- "みぎはしまで、おなじように おくっていく。",
- "にだんめに のこった くらいマスも、したを おす。",
- "さんだんめも おなじ。ひかりを したのだんへ おくる。",
- "さいごの いちマス！これで ぜんぶ つくよ。",
- "ぜんぶ ついた、クリア！ろくてで クリア！",
- "じゅうじがた、エックスがた、しかくがた、いろんな パターンに ちょうせんできる！",
- "ボードゲームひろばで けんさくして、あそんでみてね！",
+ "今日はポコっとライトを実況解説していくよ！",
+ "今回は十字型のよんバイよんをやさしく攻略していくよ！",
+ "暗いマスをぜんぶ点灯させたらクリアのライトパズルだよ。",
+ "まずはマスを押してみるよ。",
+ "押したマスと上下左右のあわせてごマスが切り替わるんだ！",
+ "この十字の動きを使ってぜんぶ点灯させよう！",
+ "コツはライトチェイス。暗いマスの下を押していくだけだよ！",
+ "いちだんめの暗いマスはすぐ下を押すよ。",
+ "となりの暗いマスも下を押して点灯。",
+ "右はしまで同じように送っていくよ。",
+ "にだんめに残った暗いマスも下を押すよ。",
+ "さんだんめも同じで光を下の段へ送るんだ。",
+ "最後のいちマス！これでぜんぶつくよ！",
+ "ぜんぶついた！クリア！ろくてでクリアだよ！",
+ "十字型のほかにもエックス型や四角型などいろんなパターンに挑戦できるよ！",
+ "ボードゲーム広場で検索して遊んでみてね！",
 ]
 
 # --- VOICEVOX 設定 (ニューラル日本語音声) -------------------------------
@@ -54,7 +54,7 @@ VV_LIB = sorted(glob.glob("/tmp/vv/voicevox_onnxruntime-*/lib/libvoicevox_onnxru
 VV_MODELS = "/tmp/vv/vvcore"
 VV_DICT = "/usr/local/lib/python3.11/dist-packages/pyopenjtalk/open_jtalk_dic_utf_8-1.11"
 VV_STYLE = 3        # ずんだもん / ノーマル
-VV_SPEED = 1.15     # やや速め
+VV_SPEED = 1.4      # 1.4倍速（テンポよく）
 VOICE_CREDIT = "音声: VOICEVOX:ずんだもん"
 
 def voicevox_available():
@@ -70,12 +70,20 @@ def _synth_voicevox():
     for i, t in enumerate(NARR_TEXT):
         aq = syn.create_audio_query(t, VV_STYLE)
         aq.speed_scale = VV_SPEED
+        aq.pre_phoneme_length = 0.03    # 前後の無音を最小化
+        aq.post_phoneme_length = 0.03
         w = wave.open(io.BytesIO(syn.synthesis(aq, VV_STYLE)))
         sr = w.getframerate()
         data = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float32)/32768.0
         if sr != SR:
             g = math.gcd(sr, SR); data = resample_poly(data, SR//g, sr//g)
-        data = data / max(1e-6, np.max(np.abs(data))) * 0.92   # 音量を揃える
+        # 前後の無音をトリム（途切れ感を防ぐ）
+        peak = max(1e-6, np.max(np.abs(data)))
+        idx = np.where(np.abs(data) > 0.012*peak)[0]
+        if idx.size:
+            a = max(0, idx[0]-int(0.015*SR)); b = min(len(data), idx[-1]+int(0.03*SR))
+            data = data[a:b]
+        data = data/peak*0.92            # 音量を揃える
         wavfile.write(f"{NARR_DIR}/n{i:02d}.wav", SR, (np.clip(data, -1, 1)*32767).astype(np.int16))
 
 def _synth_pyopenjtalk():
@@ -199,13 +207,13 @@ def render(beat, lt, dur, gt):
     return base
 
 # ---------------------------------------------------------------- ビート定義
-LEAD, TAIL = 0.22, 0.5
+LEAD, TAIL = 0.12, 0.28
 def build_beats():
     specs = [
         dict(kind="title", stage=1, cap="今日は“ポコっとライト”を実況解説！", narr=0),
         dict(kind="title", stage=2, cap=["十字型(プラス型)・4×4を", "やさしく攻略していくよ！"], narr=1),
         dict(kind="game", cap=["暗いマスをぜんぶ点灯させたら", "クリアのライトパズル！"], narr=2),
-        dict(kind="rule_point", cap="このマスを押すと…", narr=3),
+        dict(kind="rule_point", cap="まずはマスを押してみよう", narr=3),
         dict(kind="rule_flip", cap=["押したマスと上下左右、", "あわせて5マスが切り替わる！"], narr=4),
         dict(kind="rule_reset", cap=["この“十字”の動きを使って", "全部を点灯させよう！"], narr=5),
         dict(kind="solve_intro", cap=["コツは「ライトチェイス」。", "暗いマスの“下”を押すだけ！"], narr=6),
