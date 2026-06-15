@@ -10,9 +10,10 @@
 
 依存: Pillow, numpy, scipy, pyopenjtalk, imageio-ffmpeg
 """
-import os, math, subprocess, shutil
+import os, math, subprocess, shutil, glob, io, wave
 import numpy as np
 from scipy.io import wavfile
+from scipy.signal import resample_poly
 from PIL import Image, ImageDraw
 
 import importlib.util
@@ -47,13 +48,40 @@ NARR_TEXT = [
  "ボードゲームひろばで けんさくして、あそんでみてね！",
 ]
 
-def ensure_narration():
-    import imageio_ffmpeg
+# --- VOICEVOX 設定 (ニューラル日本語音声) -------------------------------
+# 利用規約によりクレジット「VOICEVOX:ずんだもん」を動画内に表示しています。
+VV_LIB = sorted(glob.glob("/tmp/vv/voicevox_onnxruntime-*/lib/libvoicevox_onnxruntime.so*"))
+VV_MODELS = "/tmp/vv/vvcore"
+VV_DICT = "/usr/local/lib/python3.11/dist-packages/pyopenjtalk/open_jtalk_dic_utf_8-1.11"
+VV_STYLE = 3        # ずんだもん / ノーマル
+VV_SPEED = 1.15     # やや速め
+VOICE_CREDIT = "音声: VOICEVOX:ずんだもん"
+
+def voicevox_available():
+    return bool(VV_LIB) and bool(glob.glob(VV_MODELS+"/*.vvm")) and os.path.isdir(VV_DICT)
+
+def _synth_voicevox():
+    from voicevox_core.blocking import Onnxruntime, OpenJtalk, Synthesizer, VoiceModelFile
+    ort = Onnxruntime.load_once(filename=VV_LIB[0])
+    syn = Synthesizer(ort, OpenJtalk(VV_DICT))
+    for vvm in sorted(glob.glob(VV_MODELS+"/*.vvm")):
+        with VoiceModelFile.open(vvm) as m:
+            syn.load_voice_model(m)
+    for i, t in enumerate(NARR_TEXT):
+        aq = syn.create_audio_query(t, VV_STYLE)
+        aq.speed_scale = VV_SPEED
+        w = wave.open(io.BytesIO(syn.synthesis(aq, VV_STYLE)))
+        sr = w.getframerate()
+        data = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float32)/32768.0
+        if sr != SR:
+            g = math.gcd(sr, SR); data = resample_poly(data, SR//g, sr//g)
+        data = data / max(1e-6, np.max(np.abs(data))) * 0.92   # 音量を揃える
+        wavfile.write(f"{NARR_DIR}/n{i:02d}.wav", SR, (np.clip(data, -1, 1)*32767).astype(np.int16))
+
+def _synth_pyopenjtalk():
+    import imageio_ffmpeg, pyopenjtalk
     ff = imageio_ffmpeg.get_ffmpeg_exe()
-    raw = "/tmp/narr"; os.makedirs(raw, exist_ok=True); os.makedirs(NARR_DIR, exist_ok=True)
-    if all(os.path.exists(f"{NARR_DIR}/n{i:02d}.wav") for i in range(len(NARR_TEXT))):
-        return
-    import pyopenjtalk
+    raw = "/tmp/narr"; os.makedirs(raw, exist_ok=True)
     for i, t in enumerate(NARR_TEXT):
         wav, sr = pyopenjtalk.tts(t)
         wav = wav / max(1e-9, np.max(np.abs(wav)))
@@ -61,6 +89,17 @@ def ensure_narration():
         subprocess.run([ff, "-y", "-i", f"{raw}/n{i:02d}.wav", "-filter:a", "atempo=1.3",
                         "-ar", str(SR), "-ac", "1", f"{NARR_DIR}/n{i:02d}.wav"],
                        check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def ensure_narration():
+    os.makedirs(NARR_DIR, exist_ok=True)
+    if all(os.path.exists(f"{NARR_DIR}/n{i:02d}.wav") for i in range(len(NARR_TEXT))):
+        return
+    if voicevox_available():
+        print("ナレーション: VOICEVOX (ずんだもん) で合成")
+        _synth_voicevox()
+    else:
+        print("ナレーション: pyopenjtalk で合成 (VOICEVOX未検出)")
+        _synth_pyopenjtalk()
 
 def narr_dur(i):
     sr, d = wavfile.read(f"{NARR_DIR}/n{i:02d}.wav")
@@ -95,6 +134,8 @@ def draw_promo(base, lt, gt, chars_anim):
         y = 760 + math.sin(gt*2+k)*12 + (1-ap)*30
         tmp = im.copy(); tmp.putalpha(tmp.getchannel("A").point(lambda v: int(v*ap)))
         mv.paste_center(base, tmp, x0+k*cw, int(y))
+    mv.text(d, W//2, 1865, VOICE_CREDIT, mv.F_SMALL, fill=(205,222,200,235),
+            stroke=(18,38,18,210), sw=3)
 
 def render(beat, lt, dur, gt):
     k = beat["kind"]
@@ -237,7 +278,7 @@ def synth_bgm(total):
         tone = 0.05*(np.sin(2*np.pi*f*seg)+0.3*np.sin(2*np.pi*2*f*seg))*env
         ee = min(n, st+len(tone)); out[st:ee] += tone[:ee-st]
     peak = np.max(np.abs(out)) or 1.0
-    out = out/peak*0.14
+    out = out/peak*0.11
     fi = int(1.2*SR); out[:fi] *= np.linspace(0,1,fi); out[-fi:] *= np.linspace(1,0,fi)
     return out
 
