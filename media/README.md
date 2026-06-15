@@ -6,9 +6,21 @@
 
 | ファイル | 内容 |
 | --- | --- |
-| `poko-light-cross4x4-short.mp4` | 本編動画（1080×1920 / 30fps / 約50秒） |
+| `poko-light-cross4x4-short-bgm.mp4` | **音声・BGM・効果音つき**本編（1080×1920 / 30fps / 約77秒） |
+| `poko-light-cross4x4-short.mp4` | 無音版（1080×1920 / 30fps / 約50秒） |
 | `poko-light-cross4x4-short.srt` | 字幕ファイル（YouTube にそのままアップ可） |
-| `../scripts/make_video.py` | 動画を生成するスクリプト |
+| `../scripts/make_video.py` | 無音版を生成するスクリプト |
+| `../scripts/make_video_av.py` | 音声・BGM・効果音つき版を生成するスクリプト |
+
+## 音声・BGM版について
+
+- **ナレーション**: `pyopenjtalk`（オフライン日本語TTS）で合成し 1.3倍速に調整。
+  各セリフの長さに合わせて映像の尺を自動調整しているので、字幕・音声・映像が同期します。
+- **BGM**: numpy で合成したやさしい森のループ（低音量でナレーションの邪魔をしません）。
+- **効果音**: マス点灯の「ポン」、クリア時のファンファーレ、タイトルのきらめき。
+
+> ナレーションは機械音声です。人の声に差し替えたい場合は、下の台本を読み上げて
+>録音し、`make_video_av.py` の音声合成部分を差し替えてください。
 
 ## 動画の構成（約50秒）
 
@@ -38,8 +50,13 @@
 ## 動画の再生成
 
 ```bash
+# 無音版
 pip install Pillow imageio-ffmpeg
 python3 scripts/make_video.py
+
+# 音声・BGM・効果音つき版
+pip install Pillow numpy scipy pyopenjtalk imageio-ffmpeg
+python3 scripts/make_video_av.py
 ```
 
 別のパズル・パターン・盤面で作りたいときは `scripts/make_video.py` の
