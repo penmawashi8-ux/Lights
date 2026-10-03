@@ -13,8 +13,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://poko.boardgamecat.com"),
   title: "ポコっとライト",
   description: "全部のマスを光らせよう！森の妖精ライトパズルゲーム",
+  // このサブドメインはゲーム本体で、クローラーが読める本文がほとんどない。
+  // 審査対象ドメイン boardgamecat.com に本文のないページを並べることになり、
+  // AdSense の「screens without publisher-content」に当たるため
+  // 検索インデックスから外す。説明文を持つ正規のページは
+  // https://boardgamecat.com/games/poko-light 側。
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -24,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ja"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
